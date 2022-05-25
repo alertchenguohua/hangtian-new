@@ -1,16 +1,19 @@
 <template>
   <div id="app">
-    <layout />
+    <router-view />
   </div>
 </template>
 
 <script>
-import layout from "./views/layout.vue";
 export default {
-  components: {
-    layout,
-  },
+  components: {},
 };
 </script>
-
-<style></style>
+<style lang="less">
+html,
+body,
+#app {
+  height: 100%;
+  color: #262626;
+}
+</style>
