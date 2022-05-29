@@ -37,11 +37,9 @@ service.interceptors.response.use(
     if (res.code !== 200) {
       if (res.code === 401) {
         Message.closeAll();
-        Message.error({ message: res.msg });
+        Message.error({ message: res.message });
       } else {
-        let message = res.msg;
-        message = message.replace(/\r\n/g, "<br>");
-        message = message.replace(/\n/g, "<br>");
+        let message = res.message;
         Message({
           message: message || "服务异常啦，请重试或联系管理员！",
           dangerouslyUseHTMLString: true,

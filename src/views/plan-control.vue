@@ -1,4 +1,4 @@
-<!--  规划控制  -->
+<!--  规划控制页面  -->
 <template>
   <div class="plan-control">
     <div>
@@ -11,141 +11,113 @@
             v-model="sceneId"
             placeholder="请选择场景"
             style="margin-left: 10px"
-            @change="sepet"
+            @change="loadScene"
           >
             <el-option
-              v-for="item in sceneOptions"
-              :key="item.value"
+              v-for="(item, i) in sceneOptions"
+              :key="i"
               :label="item.name"
               :value="item.id"
             >
             </el-option>
           </el-select>
-          <!-- <el-button type="primary" style="margin-left: 10px" @click="sepet">
-            查询
-          </el-button> -->
-          <el-button type="primary" @click="dialogVisible = true">
+          <el-button
+            type="primary"
+            @click="saveDialogVisible = true"
+            style="margin-left: 10px"
+          >
             保存
           </el-button>
           <el-button type="primary" @click="empty()">清空</el-button>
           <el-dialog
-            :visible.sync="dialogVisible"
+            :visible.sync="saveDialogVisible"
+            title="场景保存"
             width="30%"
-            :before-close="handleClose"
           >
             <div style="text-align: center">
-              <el-button @click="save()">保存新场景</el-button>
-              <el-button @click="cover()">覆盖原场景</el-button>
-            </div>
-          </el-dialog>
-          <el-dialog
-            :visible.sync="visible"
-            width="30%"
-            :before-close="handleClose"
-          >
-            <div style="text-align: center">
-              <el-input
-                placeholder="请输入场景名称"
-                v-model="valueScene"
-                style="width: 150px; margin-left: 10px"
-              ></el-input>
-              <el-button @click="visible = false">取 消</el-button>
-              <el-button type="primary" @click="newScene()">确 定</el-button>
-            </div>
-          </el-dialog>
-          <el-dialog
-            :visible.sync="dialog"
-            width="30%"
-            :before-close="handleClose"
-          >
-            <div style="text-align: center">
-              <el-select
-                filterable
-                v-model="sceneId"
-                placeholder="请选择场景"
-                style="margin-left: 10px"
+              <el-button type="primary" @click="saveScene()"
+                >保存场景</el-button
               >
-                <el-option
-                  v-for="item in sceneOptions"
-                  :key="item.value"
-                  :label="item.name"
-                  :value="item.id"
-                >
-                </el-option>
-              </el-select>
-              <el-button @click="dialog = false">取 消</el-button>
-              <el-button type="primary" @click="oldScene()">确 定</el-button>
+              <el-button @click="newSaveScene()">另存新场景</el-button>
             </div>
           </el-dialog>
-          <!-- <el-input placeholder="请输入场景名称" v-model="valueScene" style="width: 150px; margin-left: 10px"></el-input>
-        <el-button class="buttonOne" type="primary" style="margin-left: 10px" @click="newScene()">
-          新建场景
-        </el-button> -->
+          <el-dialog
+            :visible.sync="newScenedialog"
+            width="30%"
+            title="场景另存为"
+          >
+            新场景名称：
+            <el-input
+              style="width: 230px"
+              v-model="newSceneName"
+              placeholder="请输入新场景名称"
+            ></el-input>
+            <span slot="footer">
+              <el-button @click="dialog = false">取 消</el-button>
+              <el-button type="primary" @click="newSceneConfirm()"
+                >确 定</el-button
+              >
+            </span>
+          </el-dialog>
         </el-card>
       </div>
-
       <!--  仿真@@模块  -->
       <div class="fzcs">
         <el-card :bordered="false">
           <p align="center">
             <font color="#1e90ff" size="4">仿真@@</font>
           </p>
-          <font color="#1e90ff" size="3.5">干扰频1:</font>
+          <font>干扰频1:</font>
           <el-select
-            @change="choiceFrequency(frequencyOne.value)"
+            @change="choiceFrequency"
             v-model="frequencyOne.value"
             placeholder="请选择干扰频1"
             style="width: 150px; margin-left: 10px"
           >
             <el-option
-              v-for="item in frequencyOne"
-              :key="item.value"
-              :lable="item.value"
-              :value="item.lable"
+              v-for="(item, i) in frequencyOne"
+              :key="i"
+              :label="item.label"
+              :value="item.value"
             >
             </el-option>
           </el-select>
-          <font color="#1e90ff" size="3.5">干扰模式:</font>
+          <font>干扰模式:</font>
           <el-select
-            @change="choicePattern(patternOne.value)"
-            v-model="patternOne.value"
+            @change="choicePattern"
+            v-model="patternValue"
             placeholder="请选择干扰模式"
             style="width: 150px; margin-left: 10px"
           >
             <el-option
-              v-for="item in patternOne"
-              :key="item.value"
-              :lable="item.value"
-              :value="item.lable"
+              v-for="(item, i) in pattern"
+              :key="i"
+              :label="item.label"
+              :value="item.value"
             >
             </el-option>
           </el-select>
-          <font color="#1e90ff" size="3.5">干扰个数:</font>
+          <font>干扰个数:</font>
           <el-select
-            @change="choiceNum"
-            v-model="num.value"
+            v-model="number"
             style="width: 90px; margin-left: 10px"
             placeholder="请选择"
           >
             <el-option
-              v-for="item in num"
-              :key="item.value"
-              :lable="item.value"
-              :value="item.lable"
+              v-for="(item, i) in num"
+              :key="i"
+              :label="item.label"
+              :value="item.value"
             >
             </el-option> </el-select
           ><br /><br />
-          <font color="#1e90ff" size="3.5">请选择驱动形式:</font>
-          <el-select
-            @change="ChoiceDriveForms"
-            v-model="driveValue"
-            style="margin-left: 10px"
-          >
+          <font>请选择驱动形式:</font>
+          <el-select v-model="driveValue" style="margin-left: 10px">
             <el-option
-              v-for="item in DriveForms"
-              :key="item.value"
-              :lable="item.value"
-              :value="item.lable"
+              v-for="(item, i) in DriveForms"
+              :key="i"
+              :label="item.label"
+              :value="item.value"
             >
             </el-option>
           </el-select>
@@ -167,10 +139,10 @@
             <div
               class="my-tab-item"
               v-for="(item, index) in tabItemData"
-              :key="index"
+              :key="item.id"
             >
               <span
-                @click="onTab(index)"
+                @click="tabItemIndex = index"
                 :class="{ 'tab-item-active': index == tabItemIndex }"
                 >{{ item.name }}</span
               >
@@ -178,7 +150,7 @@
           </div>
           <el-form
             v-for="(item, index) in tabItemData"
-            :key="index"
+            :key="item.id"
             v-show="index == tabItemIndex"
             class="my-form"
             :inline="true"
@@ -187,8 +159,8 @@
             label-width="80px"
           >
             <div style="display: flex; flex-wrap: wrap">
-              <p style="width: 50%" align="center" v-if="driveValue === '时间'">
-                <font color="#1e90ff" size="3.5">请输入干扰时间:</font>
+              <p style="width: 50%" align="center" v-if="driveValue === 'time'">
+                <font>请输入干扰时间:</font>
                 <el-input
                   type="text"
                   placeholder="输入格式:xxxs"
@@ -198,8 +170,8 @@
                 >
                 </el-input>
               </p>
-              <p align="center" style="width: 50%" v-if="driveValue === '位置'">
-                <font color="#1e90ff" size="3.5">请输入干扰位置:</font>
+              <p style="width: 50%" v-if="driveValue === 'location'">
+                <font>请输入干扰位置:</font>
                 <el-input
                   type="text"
                   placeholder="输入格式(以减号为分隔符):x-y-z"
@@ -209,60 +181,85 @@
                 ></el-input>
               </p>
               <p style="width: 50%" align="center">
-                <font color="#1e90ff" size="3.5">请输入干扰类型:</font>
+                <font>请选择干扰类型:</font>
                 <el-select
                   v-model="item.grType"
-                  @change="single1()"
                   placeholder="请选择干扰模式"
                   style="width: 150px; margin-left: 10px"
                 >
-                  <el-option lable="0" value="欺骗干扰"></el-option>
-                  <el-option lable="1" value="压制干扰"></el-option>
+                  <el-option label="欺骗干扰" value="5"></el-option>
+                  <el-option label="压制干扰" value="2"></el-option>
                 </el-select>
               </p>
+              <section v-if="item.grType == 5">
+                <font>请输入欺骗坐标:</font>
+                <el-input-number
+                  v-model="item.jingdu"
+                  :precision="7"
+                  :step="0.1"
+                  :min="-180"
+                  :max="180"
+                  controls-position="right"
+                  style="width: 150px; margin-left: 10px"
+                ></el-input-number>
+                <el-input-number
+                  v-model="item.weidu"
+                  :precision="7"
+                  :step="0.1"
+                  :min="-90"
+                  :max="90"
+                  controls-position="right"
+                  style="width: 150px; margin-left: 10px"
+                ></el-input-number>
+                <el-input-number
+                  v-model="item.gaodu"
+                  :precision="7"
+                  :step="0.1"
+                  :min="-5000"
+                  :max="5000"
+                  controls-position="right"
+                  style="width: 150px; margin-left: 10px"
+                ></el-input-number>
+              </section>
               <p style="width: 50%" align="center">
-                <font color="#1e90ff" size="3.5">请输入干扰模式:</font>
+                <font>请选择干扰模式:</font>
                 <el-select
                   v-model="item.grPattern"
-                  @change="single1()"
                   placeholder="请选择干扰模式"
                   style="width: 150px; margin-left: 10px"
                 >
                   <el-option
-                    v-for="item in pattern"
-                    :key="item.value"
-                    :lable="item.value"
-                    :value="item.lable"
+                    v-for="(item, i) in pattern"
+                    :key="i"
+                    :label="item.label"
+                    :value="item.value"
                   >
                   </el-option>
                 </el-select>
               </p>
               <p style="width: 50%" align="center">
-                <font color="#1e90ff" size="3.5">请输入主站功率值:</font>
-                <el-input
-                  type="text"
-                  placeholder="输入主站功率值"
-                  size="18"
+                <font>请输入主站功率值:</font>
+                <el-input-number
                   v-model="item.homePower"
+                  :min="10"
+                  :max="1000"
                   style="width: 150px"
-                >
-                </el-input>
+                ></el-input-number>
               </p>
             </div>
-            <!-- <font color="#1e90ff" size="3.5">F1频段</font> -->
-            <font color="#1e90ff" size="3.5">F1频段</font>
-            <div v-if="item.grType == '压制干扰'" class="xzgrzs">
+            <!-- 频段start -->
+            <font>F1频段</font>
+            <div v-if="item.grType == '2'" class="xzgrzs">
               <el-select
-                v-model="item.form.pattern1"
-                @change="single1()"
+                v-model="item.form.mode1"
                 placeholder="请选择干扰模式"
                 style="width: 150px; margin-left: 10px"
               >
                 <el-option
-                  v-for="item in pattern"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in pattern"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
@@ -274,25 +271,22 @@
                 style="width: 150px; margin-left: 10px"
               ></el-input>
               <el-select
-                @change="choiceForms()"
-                v-model="item.form.standard1"
+                v-model="item.form.type1"
                 placeholder="请选择干扰制式"
                 style="width: 150px; margin-left: 15px"
               >
                 <el-option
-                  v-for="item in standard"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in standard"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
 
-              <p v-if="item.form.standard1 === '点频干扰'">
+              <p v-if="item.form.type1 === '0'">
                 <br />
-                <font color="#1e90ff" size="3.5"
-                  >设置{{ item.form.standard1 }}@@</font
-                >
+                <font>设置{{ standardMap[item.form.type1] }}@@</font>
                 <el-select
                   v-model="item.form.frequency1"
                   @change="selectState1($event, item)"
@@ -300,10 +294,10 @@
                   style="width: 150px; margin-left: 10px"
                 >
                   <el-option
-                    v-for="item in frequency"
-                    :key="item.value"
-                    :lable="item.value"
-                    :value="item.lable"
+                    v-for="(item, i) in frequency"
+                    :key="i"
+                    :label="item.label"
+                    :value="item.value"
                   >
                   </el-option>
                 </el-select>
@@ -316,11 +310,9 @@
                   style="width: 150px; margin-left: 15px"
                 ></el-input>
               </p>
-              <p v-if="item.form.standard1 === '调频干扰'">
+              <p v-if="item.form.type1 === '1'">
                 <br />
-                <font color="#1e90ff" size="3.5"
-                  >设置{{ item.form.standard1 }}@@</font
-                >
+                <font>设置{{ standardMap[item.form.type1] }}@@</font>
                 <el-input
                   type="text"
                   placeholder="载波频1"
@@ -343,11 +335,9 @@
                   style="width: 150px; margin-left: 15px"
                 ></el-input>
               </p>
-              <p v-if="item.form.standard1 === '扫频干扰'">
+              <p v-if="item.form.type1 === '2'">
                 <br />
-                <font color="#1e90ff" size="3.5"
-                  >设置{{ item.form.standard1 }}@@</font
-                >
+                <font>设置{{ standardMap[item.form.type1] }}@@</font>
                 <el-input
                   type="text"
                   placeholder="起始频1"
@@ -377,11 +367,9 @@
                   style="width: 120px; margin-left: 10px"
                 ></el-input>
               </p>
-              <p v-if="item.form.standard1 === '白噪声干扰'">
+              <p v-if="item.form.type1 === '3'">
                 <br />
-                <font color="#1e90ff" size="3.5"
-                  >设置{{ item.form.standard1 }}@@</font
-                >
+                <font>设置{{ standardMap[item.form.type1] }}@@</font>
                 <el-input
                   type="text"
                   placeholder="中心频1"
@@ -404,10 +392,10 @@
                   placeholder="请选择滤波器形式"
                 >
                   <el-option
-                    v-for="item in bzsgrLbqxs"
-                    :key="item.value"
-                    :lable="item.value"
-                    :value="item.lable"
+                    v-for="(item, i) in bzsgrLbqxs"
+                    :key="i"
+                    :label="item.label"
+                    :value="item.value"
                   >
                   </el-option>
                 </el-select>
@@ -421,11 +409,9 @@
                 >
                 </el-input>
               </p>
-              <p v-if="item.form.standard1 === '调相干扰'">
+              <p v-if="item.form.type1 === '4'">
                 <br />
-                <font color="#1e90ff" size="3.5"
-                  >{{ item.form.standard1 }}
-                </font>
+                <font>{{ standardMap[item.form.type1] }} </font>
                 <el-input
                   type="text"
                   placeholder="载波频1"
@@ -436,10 +422,10 @@
                 </el-input>
                 <el-select v-model="item.form.txgrTxxs1" style="width: 120px">
                   <el-option
-                    v-for="item in txgrTxxs"
-                    :key="item.value"
-                    :lable="item.value"
-                    :value="item.lable"
+                    v-for="(item, i) in txgrTxxs"
+                    :key="i"
+                    :label="item.label"
+                    :value="item.value"
                   >
                   </el-option>
                 </el-select>
@@ -453,19 +439,19 @@
                 </el-input>
                 <el-select v-model="item.form.txgrPNm1" style="width: 120px">
                   <el-option
-                    v-for="item in txgrPNm"
-                    :key="item.value"
-                    :lable="item.value"
-                    :value="item.lable"
+                    v-for="(item, i) in txgrPNm"
+                    :key="i"
+                    :label="item.label"
+                    :value="item.value"
                   >
                   </el-option>
                 </el-select>
                 <el-select v-model="item.form.txgrLbqxs1" style="width: 120px">
                   <el-option
-                    v-for="item in txgrLbqxs"
-                    :key="item.value"
-                    :lable="item.value"
-                    :value="item.lable"
+                    v-for="(item, i) in txgrLbqxs"
+                    :key="i"
+                    :label="item.label"
+                    :value="item.value"
                   >
                   </el-option>
                 </el-select>
@@ -477,11 +463,9 @@
                   style="width: 120px; margin-left: 70px; margin-top: 10px"
                 ></el-input>
               </p>
-              <p v-if="item.form.standard1 === '脉冲干扰'">
+              <p v-if="item.form.type1 === '9'">
                 <br />
-                <font color="#1e90ff" size="3.5"
-                  >设置{{ item.form.standard1 }}@@</font
-                >
+                <font>设置{{ standardMap[item.form.type1] }}@@</font>
                 <el-input
                   type="text"
                   placeholder="脉冲宽度"
@@ -506,10 +490,10 @@
                 style="width: 150px; margin-left: 10px"
               >
                 <el-option
-                  v-for="item in bit"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in bit"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
@@ -519,10 +503,10 @@
                 style="width: 150px; margin-left: 10px"
               >
                 <el-option
-                  v-for="item in bit"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in bit"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
@@ -532,10 +516,10 @@
                 style="width: 150px; margin-left: 10px"
               >
                 <el-option
-                  v-for="item in bit"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in bit"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
@@ -545,29 +529,28 @@
                 style="width: 150px; margin-left: 10px"
               >
                 <el-option
-                  v-for="item in bit"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in bit"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
             </div>
             <br />
 
-            <font color="#1e90ff" size="3.5">F2频段</font>
-            <div v-if="item.grType == '压制干扰'" class="xzgrzs">
+            <font>F2频段</font>
+            <div v-if="item.grType == '2'" class="xzgrzs">
               <el-select
-                v-model="item.form.pattern2"
-                @change="single2()"
+                v-model="item.form.mode2"
                 style="width: 150px; margin-left: 10px"
                 placeholder="请选择干扰模式"
               >
                 <el-option
-                  v-for="item in pattern"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in pattern"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
@@ -579,24 +562,21 @@
                 style="width: 150px; margin-left: 10px"
               ></el-input>
               <el-select
-                @click="choiceForms"
-                v-model="item.form.standard2"
+                v-model="item.form.type2"
                 style="width: 150px; margin-left: 10px"
                 placeholder="请选择干扰制式"
               >
                 <el-option
-                  v-for="item in standard"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in standard"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
-              <p v-if="item.form.standard2 === '点频干扰'">
+              <p v-if="item.form.type2 === '0'">
                 <br />
-                <font color="#1e90ff" size="3.5"
-                  >设置{{ item.form.standard2 }}@@</font
-                >
+                <font>设置{{ standardMap[item.form.type2] }}@@</font>
                 <el-select
                   v-model="item.form.frequency2"
                   @change="selectState2($event, item)"
@@ -604,10 +584,10 @@
                   placeholder="请选择干扰频1"
                 >
                   <el-option
-                    v-for="item in frequency"
-                    :key="item.value"
-                    :lable="item.value"
-                    :value="item.lable"
+                    v-for="(item, i) in frequency"
+                    :key="i"
+                    :label="item.label"
+                    :value="item.value"
                   >
                   </el-option>
                 </el-select>
@@ -620,11 +600,9 @@
                   style="width: 150px; margin-left: 10px"
                 ></el-input>
               </p>
-              <p v-if="item.form.standard2 === '调频干扰'">
+              <p v-if="item.form.type2 === '1'">
                 <br />
-                <font color="#1e90ff" size="3.5"
-                  >设置{{ item.form.standard2 }}@@</font
-                >
+                <font>设置{{ standardMap[item.form.type2] }}@@</font>
                 <el-input
                   type="text"
                   placeholder="载波频1"
@@ -647,11 +625,9 @@
                   style="width: 150px; margin-left: 10px"
                 ></el-input>
               </p>
-              <p v-if="item.form.standard2 === '扫频干扰'">
+              <p v-if="item.form.type2 === '2'">
                 <br />
-                <font color="#1e90ff" size="3.5"
-                  >设置{{ item.form.standard2 }}@@</font
-                >
+                <font>设置{{ standardMap[item.form.type2] }}@@</font>
                 <el-input
                   type="text"
                   placeholder="起始频1"
@@ -681,11 +657,9 @@
                   style="width: 120px; margin-left: 10px"
                 ></el-input>
               </p>
-              <p v-if="item.form.standard2 === '白噪声干扰'">
+              <p v-if="item.form.type2 === '3'">
                 <br />
-                <font color="#1e90ff" size="3.5"
-                  >设置{{ item.form.standard2 }}@@</font
-                >
+                <font>设置{{ standardMap[item.form.type2] }}@@</font>
                 <el-input
                   type="text"
                   placeholder="中心频1"
@@ -705,10 +679,10 @@
                   style="width: 100px; margin-left: 10px"
                 >
                   <el-option
-                    v-for="item in bzsgrLbqxs"
-                    :key="item.value"
-                    :lable="item.value"
-                    :value="item.lable"
+                    v-for="(item, i) in bzsgrLbqxs"
+                    :key="i"
+                    :label="item.label"
+                    :value="item.value"
                   >
                   </el-option>
                 </el-select>
@@ -720,11 +694,9 @@
                   style="width: 100px; margin-left: 10px"
                 ></el-input>
               </p>
-              <p v-if="item.form.standard2 === '调相干扰'">
+              <p v-if="item.form.type2 === '4'">
                 <br />
-                <font color="#1e90ff" size="3.5">{{
-                  item.form.standard2
-                }}</font>
+                <font>{{ standardMap[item.form.type2] }}</font>
                 <el-input
                   type="text"
                   placeholder="载波频1"
@@ -738,10 +710,10 @@
                   placeholder="调相形式"
                 >
                   <el-option
-                    v-for="item in txgrTxxs"
-                    :key="item.value"
-                    :lable="item.value"
-                    :value="item.lable"
+                    v-for="(item, i) in txgrTxxs"
+                    :key="i"
+                    :label="item.label"
+                    :value="item.value"
                   >
                   </el-option>
                 </el-select>
@@ -757,10 +729,10 @@
                   style="width: 100px; margin-left: 10px"
                 >
                   <el-option
-                    v-for="item in txgrPNm"
-                    :key="item.value"
-                    :lable="item.value"
-                    :value="item.lable"
+                    v-for="(item, i) in txgrPNm"
+                    :key="i"
+                    :label="item.label"
+                    :value="item.value"
                   >
                   </el-option>
                 </el-select>
@@ -769,10 +741,10 @@
                   style="width: 100px; margin-left: 10px"
                 >
                   <el-option
-                    v-for="item in txgrLbqxs"
-                    :key="item.value"
-                    :lable="item.value"
-                    :value="item.lable"
+                    v-for="(item, i) in txgrLbqxs"
+                    :key="i"
+                    :label="item.label"
+                    :value="item.value"
                   >
                   </el-option>
                 </el-select>
@@ -784,11 +756,9 @@
                   style="width: 100px; margin-left: 74px; margin-top: 10px"
                 ></el-input>
               </p>
-              <p v-if="item.form.standard2 === '脉冲干扰'">
+              <p v-if="item.form.type2 === '9'">
                 <br />
-                <font color="#1e90ff" size="3.5"
-                  >设置{{ item.form.standard2 }}@@</font
-                >
+                <font>设置{{ standardMap[item.form.type2] }}@@</font>
                 <el-input
                   type="text"
                   placeholder="脉冲宽度"
@@ -812,10 +782,10 @@
                 style="width: 150px; margin-left: 10px"
               >
                 <el-option
-                  v-for="item in bit"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in bit"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
@@ -825,10 +795,10 @@
                 style="width: 150px; margin-left: 10px"
               >
                 <el-option
-                  v-for="item in bit"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in bit"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
@@ -838,10 +808,10 @@
                 style="width: 150px; margin-left: 10px"
               >
                 <el-option
-                  v-for="item in bit"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in bit"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
@@ -851,29 +821,28 @@
                 style="width: 150px; margin-left: 10px"
               >
                 <el-option
-                  v-for="item in bit"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in bit"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
             </div>
             <br />
 
-            <font color="#1e90ff" size="3.5">F3频段</font>
-            <div v-if="item.grType == '压制干扰'" class="xzgrzs">
+            <font>F3频段</font>
+            <div v-if="item.grType == '2'" class="xzgrzs">
               <el-select
-                v-model="item.form.pattern3"
-                @change="single3()"
+                v-model="item.form.mode3"
                 style="width: 150px; margin-left: 10px"
                 placeholder="请选择干扰模式"
               >
                 <el-option
-                  v-for="item in pattern"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in pattern"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
@@ -885,24 +854,21 @@
                 style="width: 150px; margin-left: 10px"
               ></el-input>
               <el-select
-                @click="choiceForms"
-                v-model="item.form.standard3"
+                v-model="item.form.type3"
                 style="width: 150px; margin-left: 10px"
                 placeholder="请选择干扰制式"
               >
                 <el-option
-                  v-for="item in standard"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in standard"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
-              <p v-if="item.form.standard3 === '点频干扰'">
+              <p v-if="item.form.type3 === '0'">
                 <br />
-                <font color="#1e90ff" size="3.5"
-                  >设置{{ item.form.standard3 }}@@</font
-                >
+                <font>设置{{ standardMap[item.form.type3] }}@@</font>
                 <el-select
                   v-model="item.form.frequency3"
                   @change="selectState3($event, item)"
@@ -910,10 +876,10 @@
                   placeholder="请选择干扰频1"
                 >
                   <el-option
-                    v-for="item in frequency"
-                    :key="item.value"
-                    :lable="item.value"
-                    :value="item.lable"
+                    v-for="(item, i) in frequency"
+                    :key="i"
+                    :label="item.label"
+                    :value="item.value"
                   >
                   </el-option>
                 </el-select>
@@ -926,11 +892,9 @@
                   style="width: 150px; margin-left: 10px"
                 ></el-input>
               </p>
-              <p v-if="item.form.standard3 === '调频干扰'">
+              <p v-if="item.form.type3 === '1'">
                 <br />
-                <font color="#1e90ff" size="3.5"
-                  >设置{{ item.form.standard3 }}@@</font
-                >
+                <font>设置{{ standardMap[item.form.type3] }}@@</font>
                 <el-input
                   type="text"
                   placeholder="载波频1"
@@ -953,11 +917,9 @@
                   style="width: 150px; margin-left: 10px"
                 ></el-input>
               </p>
-              <p v-if="item.form.standard3 === '扫频干扰'">
+              <p v-if="item.form.type3 === '2'">
                 <br />
-                <font color="#1e90ff" size="3.5"
-                  >设置{{ item.form.standard3 }}@@</font
-                >
+                <font>设置{{ standardMap[item.form.type3] }}@@</font>
                 <el-input
                   type="text"
                   placeholder="起始频1"
@@ -987,11 +949,9 @@
                   style="width: 120px; margin-left: 10px"
                 ></el-input>
               </p>
-              <p v-if="item.form.standard3 === '白噪声干扰'">
+              <p v-if="item.form.type3 === '3'">
                 <br />
-                <font color="#1e90ff" size="3.5"
-                  >设置{{ item.form.standard3 }}@@</font
-                >
+                <font>设置{{ standardMap[item.form.type3] }}@@</font>
                 <el-input
                   type="text"
                   placeholder="中心频1"
@@ -1011,10 +971,10 @@
                   style="width: 120px; margin-left: 10px"
                 >
                   <el-option
-                    v-for="item in bzsgrLbqxs"
-                    :key="item.value"
-                    :lable="item.value"
-                    :value="item.lable"
+                    v-for="(item, i) in bzsgrLbqxs"
+                    :key="i"
+                    :label="item.label"
+                    :value="item.value"
                   >
                   </el-option>
                 </el-select>
@@ -1026,11 +986,9 @@
                   style="width: 100px; margin-left: 10px"
                 ></el-input>
               </p>
-              <p v-if="item.form.standard3 === '调相干扰'">
+              <p v-if="item.form.type3 === '4'">
                 <br />
-                <font color="#1e90ff" size="3.5">{{
-                  item.form.standard3
-                }}</font>
+                <font>设置{{ standardMap[item.form.type3] }}@@</font>
                 <el-input
                   type="text"
                   placeholder="载波频1"
@@ -1040,10 +998,10 @@
                 ></el-input>
                 <el-select v-model="item.form.txgrTxxs3" style="width: 100px">
                   <el-option
-                    v-for="item in txgrTxxs"
-                    :key="item.value"
-                    :lable="item.value"
-                    :value="item.lable"
+                    v-for="(item, i) in txgrTxxs"
+                    :key="i"
+                    :label="item.label"
+                    :value="item.value"
                   >
                   </el-option>
                 </el-select>
@@ -1057,10 +1015,10 @@
                 </el-input>
                 <el-select v-model="item.form.txgrPNm3" style="width: 130px">
                   <el-option
-                    v-for="item in txgrPNm"
-                    :key="item.value"
-                    :lable="item.value"
-                    :value="item.lable"
+                    v-for="(item, i) in txgrPNm"
+                    :key="i"
+                    :label="item.label"
+                    :value="item.value"
                   >
                   </el-option>
                 </el-select>
@@ -1070,10 +1028,10 @@
                   placeholder="请选择PN码"
                 >
                   <el-option
-                    v-for="item in txgrLbqxs"
-                    :key="item.value"
-                    :lable="item.value"
-                    :value="item.lable"
+                    v-for="(item, i) in txgrLbqxs"
+                    :key="i"
+                    :label="item.label"
+                    :value="item.value"
                   >
                   </el-option>
                 </el-select>
@@ -1085,11 +1043,9 @@
                   style="width: 130px; margin-left: 74px; margin-top: 10px"
                 ></el-input>
               </p>
-              <p v-if="item.form.standard3 === '脉冲干扰'">
+              <p v-if="item.form.type3 === '9'">
                 <br />
-                <font color="#1e90ff" size="3.5"
-                  >设置{{ item.form.standard3 }}@@</font
-                >
+                <font>设置{{ standardMap[item.form.type3] }}@@</font>
                 <el-input
                   type="text"
                   placeholder="脉冲宽度"
@@ -1106,6 +1062,7 @@
                 ></el-input>
               </p>
             </div>
+            <!-- 频段end -->
             <div v-else class="xzgrzs">
               <el-select
                 v-model="item.form1.f3Bit0"
@@ -1113,10 +1070,10 @@
                 style="width: 150px; margin-left: 10px"
               >
                 <el-option
-                  v-for="item in bit"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in bit"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
@@ -1126,10 +1083,10 @@
                 style="width: 150px; margin-left: 10px"
               >
                 <el-option
-                  v-for="item in bit"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in bit"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
@@ -1139,10 +1096,10 @@
                 style="width: 150px; margin-left: 10px"
               >
                 <el-option
-                  v-for="item in bit"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in bit"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
@@ -1152,10 +1109,10 @@
                 style="width: 150px; margin-left: 10px"
               >
                 <el-option
-                  v-for="item in bit"
-                  :key="item.value"
-                  :lable="item.value"
-                  :value="item.lable"
+                  v-for="(item, i) in bit"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value"
                 >
                 </el-option>
               </el-select>
@@ -1168,15 +1125,15 @@
               type="primary"
               @click="sendCommand"
             >
-              发送
+              发送指令
             </el-button>
             <el-button
               class="buttonThree"
               size="medium"
               type="primary"
-              @click="add()"
+              @click="addCmd()"
             >
-              添加
+              添加指令
             </el-button>
             <el-button
               v-show="current != null"
@@ -1185,14 +1142,13 @@
               type="primary"
               @click="changeData()"
             >
-              修改
+              修改指令
             </el-button>
           </el-form>
         </div>
       </el-card>
     </div>
     <div class="instructionsSet">
-      <!-- http://192.168.11.127:82/data/gis/run/index.html#/ -->
       <div class="right">
         <iframe
           id="ifrm"
@@ -1202,92 +1158,66 @@
           style="height: 400px; width: 800px"
         ></iframe>
         <el-button @click="flyToXiBei()">缩放到西北区域</el-button>
-        <!--          <div @click='addPopup()'>addPopup</div>-->
-        <!--          <div @click='addCustomStyleLine()'>添加自定义样式线(3秒后消失)</div>-->
-        <!--          <div @click='addCustomStyleLineWithIcon()'>添加自定义样式线（图标填充_5秒后消失）</div>-->
-        <!--          <div @click='clearCustomStyleLine()'>删除自定义样式线</div>-->
-        <!--          <div @click='addTarget()'>addTarget</div>-->
-        <!--          <div @click='addTargetHistory()'>addTargetHistory</div>-->
-        <el-button @click="setStations()">设置干饭站位置</el-button>
-        <el-button @click="addCustomStyleLine()"
-          >添加自定义样式线(3秒后消失)</el-button
-        >
-        <el-button @click="addTargetHistory()">addTargetHistory</el-button>
-        <!--          <div @click='clearTarget()'>clearTarget</div>-->
-        <!--          <div @click='clearStations()'>clearStations</div>-->
-        <!--          <div @click='clearTargetHistory()'>clearTargetHistory</div>-->
+        <el-button @click="setStations()">设置站位置</el-button>
+        <el-button @click="addCustomStyleLine()">添加自定义样式线</el-button>
+        <el-button @click="addTargetHistory()">设置目标轨迹</el-button>
         <el-button @click="clearMap()">删除所有要素</el-button>
-        <el-button @click="enableDrawTool()">enableDrawTool</el-button>
-        <!--          <div @click='disableDrawTool()'>disableDrawTool</div>-->
-        <!--          <div @click='animateReceiveData()'>animateReceiveData</div>-->
-        <!--          <div @click='stopAnimate()'>stopAnimate</div>-->
+        <el-button @click="enableDrawTool()">绘制路径</el-button>
+        <el-button @click="disableDrawTool()">结束绘制</el-button>
       </div>
       <div>
-        <el-button @click="bujupanjue()">布局判决</el-button>
-        <el-button @click="fangzhenyanzheng()">仿真验证</el-button>
-        <el-button @click="messageshow()">信息展示</el-button>
-        <el-button @click="animateReceiveData()">animateReceiveData</el-button>
-        <el-button @click="start()">开始执行</el-button>
-        <el-button @click="over()">结束执行</el-button>
+        <el-button @click="layoutValidate()">布局判决</el-button>
+        <el-button @click="simulationValidate()">仿真验证</el-button>
+        <el-button @click="messageShow()">信息展示</el-button>
+        <el-button @click="animateReceiveData()">连续接收数据展示</el-button>
+        <el-button @click="taskAndFlight('startTask')">开始执行</el-button>
+        <el-button @click="taskAndFlight('terminateTask')">结束执行</el-button>
+        <el-button @click="taskAndFlight('simulatedFlight')"
+          >模拟飞行</el-button
+        >
       </div>
       <el-card :bordered="false">
         <div style="min-height: 230px; text-align: center">
           <font color="#1e90ff" size="5">指令集</font><br />
           <ol>
             <li
-              :class="{ active: index == current }"
+              :class="['cmd-list', { active: index == current }]"
               style="text-align: left"
-              @click="getTdate(item, index)"
+              @click="getCmdData(item, index)"
               v-for="(item, index) in masterStation"
-              :key="item.id"
+              :key="index"
             >
-              <div v-if="item.grType == '压制干扰'">
-                {{ item.tabs }}{{ item.zai }}{{ item.f1 }}
-
-                {{ item.InterfereTime }} {{ item.frequency1 }}{{ item.pattern1
-                }}{{ item.power1 }}{{ item.standard1 }}{{ item.dpgrZbpl1
-                }}{{ item.tpgrZbpl1 }}{{ item.tpgrTzpl1 }}{{ item.tpgrZbpp1 }}
-                {{ item.spgrQspl1 }}{{ item.spgrZzpl1 }}{{ item.spgrSpds1
-                }}{{ item.spgrPdzlsj1 }}{{ item.bzsgrZxpl1 }}{{ item.bzsgrDk1
-                }}{{ item.bzsgrLbqxs1 }} {{ item.bzsgrLbqaz1
-                }}{{ item.txgrZbpl1 }}{{ item.txgrTxxs }}{{ item.txgrFhsl1
-                }}{{ item.txgrPNm1 }}{{ item.txgrLbqxs1 }}{{ item.txgrLbqaz1 }}
-                {{ item.mcgrMckd1 }}{{ item.mcgrZq1 }}
-
-                {{ item.tabs1 }}{{ item.zai1 }}{{ item.f2 }}{{ item.frequency2
-                }}{{ item.pattern2 }}{{ item.standard2 }}{{ item.power2
-                }}{{ item.dpgrZbpl2 }}{{ item.tpgrZbpl2 }}{{ item.tpgrTzpl2 }}
-                {{ item.tpgrZbpp2 }}{{ item.spgrQspl2 }}{{ item.spgrZzpl2
-                }}{{ item.spgrSpds2 }}{{ item.spgrPdzlsj2 }}{{ item.bzsgrZxpl2
-                }}{{ item.bzsgrDk2 }} {{ item.bzsgrLbqxs2 }}{{ item.bzsgrLbqaz2
-                }}{{ item.txgrZbpl2 }}{{ item.txgrTxxs2 }}{{ item.txgrFhsl2
-                }}{{ item.txgrPNm2 }}{{ item.txgrLbqxs2 }} {{ item.txgrLbqaz2
-                }}{{ item.mcgrMckd2 }}{{ item.mcgrZq2 }}
-
-                {{ item.tabs2 }}{{ item.zai2 }}{{ item.f3 }}{{ item.frequency3
-                }}{{ item.pattern3 }}{{ item.standard3 }}{{ item.power3
-                }}{{ item.dpgrZbpl3 }}{{ item.tpgrZbpl3 }}{{ item.tpgrTzpl3 }}
-                {{ item.tpgrZbpp3 }}{{ item.spgrQspl3 }}{{ item.spgrZzpl3
-                }}{{ item.spgrSpds3 }}{{ item.spgrPdzlsj3 }}{{ item.bzsgrZxpl3
-                }}{{ item.bzsgrDk3 }} {{ item.bzsgrLbqxs3 }}{{ item.bzsgrLbqaz3
-                }}{{ item.txgrZbpl3 }}{{ item.txgrTxxs3 }}{{ item.txgrFhsl3
-                }}{{ item.txgrPNm3 }}{{ item.txgrLbqxs3 }} {{ item.txgrLbqaz3
-                }}{{ item.mcgrMckd3 }}{{ item.mcgrZq3 }}
+              <div v-if="item.grType == '2'">
+                {{ item.tab }}在{{
+                  driveValue == "time"
+                    ? `任务时间${item.indicator}s`
+                    : `位置${item.indicator}处`
+                }}发送干扰; F1频段{{ standardMap[item.type1] }}干扰，{{
+                  patternMap[item.mode1]
+                }}模式，功率{{ item.power1 }},参数列表{{ item.value1 }};
+                F2频段{{ standardMap[item.type2] }}干扰，{{
+                  patternMap[item.mode2]
+                }}模式，功率{{ item.power2 }}db,参数列表{{ item.value2 }};
+                F3频段{{ standardMap[item.type3] }}干扰，{{
+                  patternMap[item.mode3]
+                }}模式，功率{{ item.power3 }},参数列表{{ item.value3 }}。
               </div>
               <div v-else>
-                {{ item.tab }}{{ item.zai }}{{ item.f1 }} {{ item.f1Bit0
-                }}{{ item.f1Bit1 }}{{ item.f1Bit2 }}{{ item.f1Bit3 }}
-                {{ item.tab }}{{ item.zai }}{{ item.f2 }} {{ item.f2Bit0
-                }}{{ item.f2Bit1 }}{{ item.f2Bit2 }}{{ item.f2Bit3 }}
-                {{ item.tab }}{{ item.zai }}{{ item.f3 }} {{ item.f3Bit0
-                }}{{ item.f3Bit1 }}{{ item.f3Bit2 }}{{ item.f3Bit3 }}
+                {{ item.tab }}在飞行位置{{ item.cheat_coordinate }}处发送干扰,
+                F1{{ patternMap[item.mode] }}欺骗干扰，频点有效列表{{
+                  item.f1Bit
+                }}; F2{{ patternMap[item.mode] }}欺骗干扰，频点有效列表{{
+                  item.f2Bit
+                }}; F3{{ patternMap[item.mode] }}欺骗干扰，频点有效列表{{
+                  item.f3Bit
+                }}。
               </div>
               <el-button
                 v-show="masterStation.length != 0"
                 class="btnDelete"
                 type="primary"
                 size="small"
-                @click="deleteData()"
+                @click="deleteData(index)"
               >
                 删除
               </el-button>
@@ -1297,195 +1227,131 @@
       </el-card>
     </div>
     <!-- 仿真验证触发弹框展示表格数据 -->
-    <el-dialog title="仿真验证" width="60%" :visible.sync="fzdialogVisible">
+    <el-dialog title="仿真验证" width="80%" :visible.sync="fzdialogVisible">
       <el-table
         border
-        :data="tableData"
-        height="400"
+        :data="fangzhenTableData"
+        height="500"
         :span-method="objectSpanMethod"
       >
-        <el-table-column prop="id" label="id" width="80" />
-        <el-table-column prop="coordinate" width="120" label="coordinate" />
-        <el-table-column prop="v" label="v" />
-        <el-table-column prop="station_id" width="120" label="station_id" />
-        <el-table-column prop="f" label="f" />
-        <el-table-column prop="P" label="P" />
-        <el-table-column prop="Q" label="Q" />
-        <el-table-column prop="singleFlag" width="120" label="singleFlag" />
+        <el-table-column prop="id" label="轨迹点序号-id" />
+        <el-table-column prop="coordinates" label="轨迹点坐标-coordinates" />
+        <el-table-column prop="stationId" label="站号-stationId" />
+        <el-table-column prop="f" label="信号频率-f" />
+        <el-table-column prop="p" label="源端功率-p" />
+        <el-table-column prop="q" label="目标处功率-q" />
+        <el-table-column prop="frequencyFlag" label="有效标识-frequencyFlag" />
+        <el-table-column prop="flag" label="点有效标识-flag" />
       </el-table>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-import { tabItemData } from "@/common/data.js";
+import {
+  tabItemData,
+  commonFrequency,
+  pattern,
+  txgrPNm,
+  standard,
+} from "@/common/data.js";
 export default {
   name: "deviceMng",
   components: {},
   data() {
     return {
       fzdialogVisible: false, // 仿真验证触发弹框
-      trackSplitList: [],
-      ok: "ok",
-      track: "",
+      sceneData: {}, // 场景加载返回数据
+      fangzhenTableData: [], // 仿真验证表格数据
       testData: [],
-      tableData: [],
-      stationcolor1: "", //干扰站颜色
-      stationcolor2: "", //干扰站颜色
-      stationcolor3: "", //干扰站颜色
-      stationcolor4: "", //干扰站颜色
-      trackcolor1: "", //轨迹点颜色
-      trackcolor2: "", //轨迹点颜色
-      trackcolor3: "", //轨迹点颜色
-      trackcolor4: "", //轨迹点颜色
-      dialogVisible: false,
-      dialog: false,
-      visible: false,
-      coordinatesList: [],
-      coordinatesOne: [],
-      coordinatesTwo: [],
-      coordinatesThree: [],
-      coordinatesFour: [],
-      coordinates: [],
-      md5list: "",
-      hexcase: "0",
-      b64pad: "",
-      setmd5: "",
-      md5app: "",
-      timestamp: "", //时间戳
-      tabItemIndex: 0,
+      saveDialogVisible: false, // 场景保存确认框
+      newScenedialog: false, // 新场景保存弹框
+      trackList: [], // track轨迹坐标集合
+      stationList: [], // station站点轨迹坐标集合
+      tabItemIndex: 0, // 站点tab索引也可对应站点id
       tabItemData, // 站点数据集合
       bit: [
         {
           value: "0",
-          lable: "0",
+          label: "0",
         },
         {
           value: "1",
-          lable: "1",
+          label: "1",
         },
       ],
-      current: null,
-      coordinates1: [85.03, 39.21],
-      coordinates2: [85.53, 39.41],
-      coordinates3: [86.35, 39.31],
-      coordinates4: [87.35, 39.31],
-      showSessionId: "",
-      src: "",
-      f1: "F1频段", //
-      zai: "在",
-      valueScene: "", //新建场景@@
+      current: null, // 当前指令索引
       sceneId: "", // 场景id
+      newSceneName: "", // 新场景名称
       sceneOptions: [], // 场景下拉数据
-      frequency: [
-        { value: "1", lable: "GPS-L1" },
-        { value: "2", lable: "GPS-L2" },
-        { value: "3", lable: "GLONASS-G1" },
-        { value: "4", lable: "BD/BD3-B1I" },
-        { value: "5", lable: "BD/BD3-B2I" },
-        { value: "6", lable: "BD/BD3-B3I" },
-        { value: "7", lable: "BD/BD3-B1C" },
-        { value: "8", lable: "BD/BD3-B2a" },
-        { value: "9", lable: "BD/BD3-B2b" },
-        { value: "10", lable: "其他" },
-      ],
-      frequencyOne: [
-        { value: "1", lable: "GPS-L1" },
-        { value: "2", lable: "GPS-L2" },
-        { value: "3", lable: "GLONASS-G1" },
-        { value: "4", lable: "BD/BD3-B1I" },
-        { value: "5", lable: "BD/BD3-B2I" },
-        { value: "6", lable: "BD/BD3-B3I" },
-        { value: "7", lable: "BD/BD3-B1C" },
-        { value: "8", lable: "BD/BD3-B2a" },
-        { value: "9", lable: "BD/BD3-B2b" },
-      ],
-      patternOne: [
-        {
-          value: "1",
-          lable: "固定源端功1",
-        },
-        {
-          value: "2",
-          lable: "固定目标处功1",
-        },
-        {
-          value: "3",
-          lable: "固定指向和源端功1",
-        },
-      ],
-      pattern: [
-        {
-          value: "1",
-          lable: "固定源端功1",
-        },
-        {
-          value: "2",
-          lable: "固定目标处功1",
-        },
-        {
-          value: "3",
-          lable: "固定指向和源端功1",
-        },
-      ],
+      frequencyOne: commonFrequency,
+      frequency: [...commonFrequency, { value: "10", label: "其他" }],
+      patternValue: "", // 仿真模块干扰模式绑定值
+      pattern,
+      patternMap: {
+        0: "固定源端功1",
+        1: "固定目标处功1",
+        2: "固定指向和源端功1",
+      },
       num: [
-        { value: "1", lable: "1" },
-        { value: "2", lable: "2" },
-        { value: "3", lable: "3" },
-        { value: "4", lable: "4" },
-      ],
+        { value: "1", label: "1" },
+        { value: "2", label: "2" },
+        { value: "3", label: "3" },
+        { value: "4", label: "4" },
+      ], // 干扰个数下拉数据
+      number: "", // 干扰个数
       txgrTxxs: [
-        { value: "1", lable: "0:BPSK" },
-        { value: "2", lable: "1:QPSK" },
+        { value: "1", label: "0:BPSK" },
+        { value: "2", label: "1:QPSK" },
       ],
-      driveValue: "时间", // 驱动形式默认时间
+      driveValue: "time", // 驱动形式默认时间
       DriveForms: [
         {
-          value: "1",
-          lable: "时间",
+          value: "time",
+          label: "时间",
         },
         {
-          value: "2",
-          lable: "位置",
+          value: "location",
+          label: "位置",
         },
       ],
-      standard: [
-        { value: "1", lable: "点频干扰" },
-        { value: "2", lable: "调频干扰" },
-        { value: "3", lable: "扫频干扰" },
-        { value: "4", lable: "白噪声干扰" },
-        { value: "5", lable: "调相干扰" },
-        { value: "6", lable: "脉冲干扰" },
-      ],
+      standard, // 干扰制式,
+      standardMap: {
+        // 干扰制式映射
+        0: "点频",
+        1: "调频",
+        2: "扫频",
+        3: "白噪声",
+        4: "调相",
+        9: "脉冲",
+        255: "无效",
+      },
       bzsgrLbqxs: [
-        { value: "1", lable: "0:升余弦" },
-        { value: "2", lable: "1:矩形" },
-        { value: "3", lable: "2:高斯" },
+        { value: "1", label: "0:升余弦" },
+        { value: "2", label: "1:矩形" },
+        { value: "3", label: "2:高斯" },
       ],
-      txgrPNm: [
-        { value: "1", lable: "0:PN9" },
-        { value: "2", lable: "1:PN11" },
-        { value: "3", lable: "2:PN15" },
-        { value: "4", lable: "3:PN20" },
-        { value: "5", lable: "4:PN23" },
-      ],
+      txgrPNm, // 调相干扰PN
       txgrLbqxs: [
-        { value: "1", lable: "0:升余弦" },
-        { value: "2", lable: "1:矩形" },
-        { value: "3", lable: "2:高斯" },
+        { value: "1", label: "0:升余弦" },
+        { value: "2", label: "1:矩形" },
+        { value: "3", label: "2:高斯" },
       ],
-      newscene: {}, //新建场景对象
-      list: {}, //指令集
-      masterStation: [], //主1
-      ganxinbi: "",
-      num1: "1",
-      num2: "1",
-      num3: "1",
-      num4: "1",
+      masterStation: [], // 站点数据集合-与指令数据关系密切
+      ganxinbi: "", // 干信比门限
+      filterStation: {
+        0: "主站1",
+        1: "从站1",
+        2: "从站2",
+        3: "从站3",
+      }, // id-站点映射
     };
   },
-  watch: {},
+  mounted() {
+    this.getSceneList(); // 获取场景数据
+    this.mapEventsListener(); // 地图事件捕获
+    // TODO: 后期可实现--站点数据需要一个默认的，不需要加载场景即可渲染到地图上，保存的时候保存最后操作的站点数据当作再次进入的默认站点数据
+  },
   methods: {
     //场景下拉框获取数据
     async getSceneList() {
@@ -1496,78 +1362,105 @@ export default {
         console.log(error);
       }
     },
-    getData() {
-      let params = {
-        name: "simulationValidate",
-        app_key: "sixteen",
-        data: "",
-        version: "",
-        timestamp: this.timestamp,
-        format: "json",
-      };
-      params.sign = this.buildSign(params);
-      //    axios
-      //   .post("http://streamwind.picp.vip:14028/api", {
-
-      //     name: "simulationValidate",
-      //     app_key: "sixteen",
-      //     data: "",
-      //     version: "",
-      //     timestamp: this.timestamp,
-      //     sign: params.sign,
-      //     format: "json",
-      //   }).then((res => {
-      //     console.log(res);
-      //   }))
-      axios
-        .post("http://streamwind.picp.vip:14028/api", {
-          name: "simulationValidate",
-          app_key: "sixteen",
-          data: "",
-          version: "",
-          timestamp: this.timestamp,
-          sign: params.sign,
-          format: "json",
-        })
-        .then((res) => {
-          console.log(res);
-          let data = res.data.data.track;
-          for (let i = 0; i < data.length; i++) {
-            const e = data[i];
-            e.result.map((item) => {
-              item.res.map((item2) => {
-                // console.log(item2);
-                this.tableData.push({
-                  id: JSON.stringify(e.id),
-                  coordinate: e.coordinate.toString(),
-                  v: JSON.stringify(e.v),
-                  station_id: JSON.stringify(item.station_id),
-                  P: JSON.stringify(item2.P),
-                  Q: JSON.stringify(item2.Q),
-                  f: JSON.stringify(item2.f),
-                  singleFlag: JSON.stringify(item2.singleFlag),
-                });
+    // 地图事件捕获
+    mapEventsListener() {
+      window.addEventListener("message", (event) => {
+        let data = event.data;
+        if (!data || !data.cmd) {
+          return;
+        }
+        if (data.cmd === "Map_DblClick") {
+          if (!data.params) return;
+          let { lon, lat } = data.params;
+          console.log("Map_DblClick:双击了地图：[" + lon + "," + lat + "],");
+        } else if (data.cmd === "Map_RightClick") {
+          if (!data.params) return;
+          let { lon, lat } = data.params;
+          console.log(
+            "Map_RightClick:右键点击了地图：[" + lon + "," + lat + "],"
+          );
+        } else if (data.cmd === "Station_RightClick") {
+          if (!data.params) return;
+          let { id, lon, lat } = data.params;
+          console.log("Station_RightClick", id, [lon, lat]);
+          this.addEditPopup(id, [lon, lat]);
+        } else if (data.cmd === "Station_Click") {
+          if (!data.params) return;
+          let { id, lon, lat } = data.params;
+          console.log("Station_Click", id, [lon, lat]);
+        } else if (data.cmd === "Line_Drawn") {
+          // 路径绘制完成绑定track数据
+          if (!data.params) return;
+          let { coordinates } = data.params;
+          console.log("路径绘制完成，坐标为：", coordinates);
+          this.trackList = []; // 先清空然后放入新的坐标
+          coordinates.forEach((item, i) => {
+            this.trackList.push({
+              id: i,
+              v: 500, // 默认速度
+              coordinates: item,
+            });
+          });
+          this.addTargetHistory();
+        } else if (data.cmd === "EditPopup_Submit") {
+          if (!data.params) return;
+          this.setStations();
+          console.log("EditPopup_Submit：" + JSON.stringify(data.params));
+        } else if (data.cmd === "Station_DragEnd") {
+          // 站点拖动更新站点数据
+          if (!data.params) return;
+          let { id, lon, lat } = data.params;
+          console.log("Station_DragEnd:ID为", id, lon, lat);
+          let index = this.stationList.findIndex((item) => item.id == id);
+          this.stationList[index].coordinates[0] = lon;
+          this.stationList[index].coordinates[1] = lat;
+          console.log(this.stationList, "变更站点后的数据");
+        }
+      });
+    },
+    // 仿真验证 TODO: 参数动态的
+    async simulationValidate() {
+      try {
+        const { result } = await this.$api.simulationValidate(this.sceneData);
+        result.track.forEach((track) => {
+          track.res.forEach((res) => {
+            res.stationRes.forEach((s) => {
+              this.fangzhenTableData.push({
+                id: track.id,
+                coordinates: track.coordinates.join(","),
+                stationId: res.stationId,
+                f: s.f,
+                p: s.p,
+                q: s.q,
+                frequencyFlag: s.frequencyFlag.toString(),
+                flag: track.flag.toString(),
               });
             });
-          }
+          });
         });
+        this.fzdialogVisible = true;
+      } catch (error) {
+        console.log(error, "仿真error");
+      }
     },
-    ticketFlitterData(arr) {
-      // console.log(arr,"ar");
+    // 表格合并逻辑
+    objectSpanMethod({ rowIndex, columnIndex }) {
+      if (columnIndex === 0) {
+        const _row = this.mergeData(this.fangzhenTableData).one[rowIndex];
+        const _col = _row > 0 ? 1 : 0;
+        return {
+          rowspan: _row,
+          colspan: _col,
+        };
+      }
+    },
+    // 数据归并返回
+    mergeData(arr) {
       let spanOneArr = [];
-      let spanTwoArr = [];
-      let spanThreeArr = [];
-      let spanFourArr = [];
       let concatOne = 0;
-      let concatTwo = 0;
-      let concatThree = 0;
-      let concatFour = 0;
       arr.forEach((item, index) => {
         if (index === 0) {
           spanOneArr.push(1);
-          spanTwoArr.push(1);
-          spanThreeArr.push(1);
-          spanFourArr.push(1);
         } else {
           //id
           if (item.id === arr[index - 1].id) {
@@ -1578,176 +1471,48 @@ export default {
             spanOneArr.push(1);
             concatOne = index;
           }
-
-          if (item.coordinate === arr[index - 1].coordinate) {
-            //第二列需合并相同内容的判断条件
-            spanTwoArr[concatTwo] += 1;
-            spanTwoArr.push(0);
-          } else {
-            spanTwoArr.push(1);
-            concatTwo = index;
-          }
-
-          if (item.v === arr[index - 1].v && item.id === arr[index - 1].id) {
-            //第三列需合并相同内容的判断条件
-            spanThreeArr[concatThree] += 1;
-            spanThreeArr.push(0);
-          } else {
-            spanThreeArr.push(1);
-            concatThree = index;
-          }
-
-          if (item.station_id === arr[index - 1].station_id) {
-            //第四列需合并相同内容的判断条件
-            spanFourArr[concatFour] += 1;
-            spanFourArr.push(0);
-          } else {
-            spanFourArr.push(1);
-            concatFour = index;
-          }
         }
       });
-
       return {
         one: spanOneArr,
-        two: spanTwoArr,
-        three: spanThreeArr,
-        four: spanFourArr,
       };
     },
-    objectSpanMethod({ rowIndex, columnIndex }) {
-      // console.log(rowIndex, columnIndex ,"rowIndex, columnIndex ");
-
-      if (columnIndex === 0) {
-        // this.tableData  修改
-        const _row = this.ticketFlitterData(this.tableData).one[rowIndex];
-
-        const _col = _row > 0 ? 1 : 0;
-
-        return {
-          rowspan: _row,
-          colspan: _col,
-        };
-      }
-      if (columnIndex === 1) {
-        // this.tableData  修改
-        const _row = this.ticketFlitterData(this.tableData).two[rowIndex];
-
-        const _col = _row > 0 ? 1 : 0;
-
-        return {
-          rowspan: _row,
-          colspan: _col,
-        };
-      }
-      if (columnIndex === 2) {
-        // this.tableData  修改
-        const _row = this.ticketFlitterData(this.tableData).three[rowIndex];
-
-        const _col = _row > 0 ? 1 : 0;
-
-        return {
-          rowspan: _row,
-          colspan: _col,
-        };
-      }
-      if (columnIndex === 3) {
-        // this.tableData  修改
-        const _row = this.ticketFlitterData(this.tableData).four[rowIndex];
-
-        const _col = _row > 0 ? 1 : 0;
-
-        return {
-          rowspan: _row,
-          colspan: _col,
-        };
-      }
-    },
-    // 站点切换
-    onTab(index) {
-      this.tabItemIndex = index;
-    },
-    //新建场景
-    newScene() {
-      this.newscene = {
-        name: this.valueScene,
-      };
-      let name = this.newscene;
-      let id = "";
-      let track = this.trackSplitList;
-      let data = {
-        param: this.tabItemData, //后端数据
-        id: id,
-        name: name,
-        frequencyOne: this.frequencyOne.value,
-        patternOne: this.patternOne.value,
-        num: this.num.value,
-        DriveForms: this.driveValue,
-        ganxinbi: this.ganxinbi,
-      };
-      console.log(track);
-      console.log(data);
-      this.options.push(this.newscene);
-
-      this.visible = false;
-      if (this.ok == "ok") {
-        this.$message({
-          message: "新建场景成功",
-          type: "success",
+    // 场景另存为
+    async newSceneConfirm() {
+      try {
+        if (!this.newSceneName.trim()) {
+          this.$message({
+            message: "请输入新场景名称！",
+            type: "error",
+          });
+          return;
+        }
+        await this.$api.saveScene({
+          scene_id: "", // 另存为不传id
+          scene_name: this.newSceneName,
+          ...this.sceneData,
         });
-      }
-    },
-    //覆盖
-    oldScene() {
-      let id = this.id; //场景名称
-
-      console.log(name);
-      this.dialog = false;
-      let track = this.trackSplitList;
-      let data = {
-        param: this.tabItemData, //后端数据
-        id: id,
-        frequencyOne: this.frequencyOne.value,
-        patternOne: this.patternOne.value,
-        num: this.num.value,
-        DriveForms: this.driveValue,
-        ganxinbi: this.ganxinbi,
-      };
-      console.log(track);
-      console.log(data);
-      if (this.ok == "ok") {
+        this.getSceneList();
         this.$message({
           message: "覆盖场景成功",
           type: "success",
         });
+        this.newScenedialog = false;
+      } catch (error) {
+        console.log(error);
       }
     },
-    //添加
-    add() {
-      this.list = {
-        frequency: this.frequency.value,
-        pattern: this.pattern.value,
-        num: this.num.value,
-        DriveForms: this.driveValue,
-        ganxinbi: this.ganxinbi,
-      };
-      //新增元素
-      this.masterStation = this.getMastetData();
+    //添加指令 TODO: 在指令集中添加一条站点指令
+    addCmd() {
+      // this.masterStation = this.getMastetData();
     },
-    //
+    // 仿真模块干扰频1与下方设置点频同步
     choiceFrequency(val) {
-      this.tabItemData[0].form.frequency1 = val;
-      this.tabItemData[0].form.frequency2 = val;
-      this.tabItemData[0].form.frequency3 = val;
-      this.tabItemData[1].form.frequency1 = val;
-      this.tabItemData[1].form.frequency2 = val;
-      this.tabItemData[1].form.frequency3 = val;
-      this.tabItemData[2].form.frequency1 = val;
-      this.tabItemData[2].form.frequency2 = val;
-      this.tabItemData[2].form.frequency3 = val;
-      this.tabItemData[3].form.frequency1 = val;
-      this.tabItemData[3].form.frequency2 = val;
-      this.tabItemData[3].form.frequency3 = val;
+      for (let i = 0; i < 3; i++) {
+        this.tabItemData[i].form.frequency1 = val;
+        this.tabItemData[i].form.frequency2 = val;
+        this.tabItemData[i].form.frequency3 = val;
+      }
       for (let i = 0; i < 4; i++) {
         this.selectState1(val, this.tabItemData[i]);
         this.selectState2(val, this.tabItemData[i]);
@@ -1882,12 +1647,8 @@ export default {
       }
     },
 
-    // state1:false,//f1禁用
-    // state2:false,//f2禁用
-    // state3:false,//f3禁用
     selectState1(val, item) {
       // console.log(val, item, "val, item");
-      this.$forceUpdate();
       switch (item.name) {
         case "主站1":
           this.stateFilter1(val, item.id);
@@ -1904,7 +1665,6 @@ export default {
       }
     },
     selectState2(val, item) {
-      this.$forceUpdate();
       switch (item.name) {
         case "主站1":
           this.stateFilter2(val, item.id);
@@ -1921,7 +1681,6 @@ export default {
       }
     },
     selectState3(val, item) {
-      this.$forceUpdate();
       switch (item.name) {
         case "主站1":
           this.stateFilter3(val, item.id);
@@ -1941,188 +1700,93 @@ export default {
       if (this.tabItemData[1].name == "从站1") {
         if (val == "GPS-L1") {
           this.tabItemData[1].form.dpgrZbpl1 = "1";
-          this.aaaaaaa = true;
         } else if (val == "GPS-L2") {
           this.tabItemData[1].form.dpgrZbpl1 = "2";
-          this.aaaaaaa = true;
         } else if (val == "GLONASS-G1") {
           this.tabItemData[1].form.dpgrZbpl1 = "3";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B1I") {
           this.tabItemData[1].form.dpgrZbpl1 = "4";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B2I") {
           this.tabItemData[1].form.dpgrZbpl1 = "5";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B3I") {
           this.tabItemData[1].form.dpgrZbpl1 = "6";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B1C") {
           this.tabItemData[1].form.dpgrZbpl1 = "7";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B2a") {
           this.tabItemData[1].form.dpgrZbpl1 = "8";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B2b") {
           this.tabItemData[1].form.dpgrZbpl1 = "9";
-          this.aaaaaaa = true;
         } else if (val == "其他") {
           this.tabItemData[1].form.dpgrZbpl1 = "";
-          this.aaaaaaa = false;
         }
       }
       //从站2
       if (this.tabItemData[2].name == "从站2") {
         if (val == "GPS-L1") {
           this.tabItemData[2].form.dpgrZbpl1 = "1";
-          this.aaaaaaa = true;
         } else if (val == "GPS-L2") {
           this.tabItemData[2].form.dpgrZbpl1 = "2";
-          this.aaaaaaa = true;
         } else if (val == "GLONASS-G1") {
           this.tabItemData[2].form.dpgrZbpl1 = "3";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B1I") {
           this.tabItemData[2].form.dpgrZbpl1 = "4";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B2I") {
           this.tabItemData[2].form.dpgrZbpl1 = "5";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B3I") {
           this.tabItemData[2].form.dpgrZbpl1 = "6";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B1C") {
           this.tabItemData[2].form.dpgrZbpl1 = "7";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B2a") {
           this.tabItemData[2].form.dpgrZbpl1 = "8";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B2b") {
           this.tabItemData[2].form.dpgrZbpl1 = "9";
-          this.aaaaaaa = true;
         } else if (val == "其他") {
           this.tabItemData[2].form.dpgrZbpl1 = "";
-          this.aaaaaaa = false;
         }
       }
       //从站3
       if (this.tabItemData[3].name == "从站3") {
         if (val == "GPS-L1") {
           this.tabItemData[3].form.dpgrZbpl1 = "1";
-          this.aaaaaaa = true;
         } else if (val == "GPS-L2") {
           this.tabItemData[3].form.dpgrZbpl1 = "2";
-          this.aaaaaaa = true;
         } else if (val == "GLONASS-G1") {
           this.tabItemData[3].form.dpgrZbpl1 = "3";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B1I") {
           this.tabItemData[3].form.dpgrZbpl1 = "4";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B2I") {
           this.tabItemData[3].form.dpgrZbpl1 = "5";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B3I") {
           this.tabItemData[3].form.dpgrZbpl1 = "6";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B1C") {
           this.tabItemData[3].form.dpgrZbpl1 = "7";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B2a") {
           this.tabItemData[3].form.dpgrZbpl1 = "8";
-          this.aaaaaaa = true;
         } else if (val == "BD/BD3-B2b") {
           this.tabItemData[3].form.dpgrZbpl1 = "9";
-          this.aaaaaaa = true;
         } else if (val == "其他") {
           this.tabItemData[3].form.dpgrZbpl1 = "";
-          this.aaaaaaa = false;
         }
       }
     },
-
+    // 仿真模块处的干扰切换--下方站点的干扰模式联动
     choicePattern(val) {
-      this.tabItemData[0].form.pattern1 = val;
-      this.tabItemData[0].form.pattern2 = val;
-      this.tabItemData[0].form.pattern3 = val;
-      this.tabItemData[1].form.pattern1 = val;
-      this.tabItemData[1].form.pattern2 = val;
-      this.tabItemData[1].form.pattern3 = val;
-      this.tabItemData[2].form.pattern1 = val;
-      this.tabItemData[2].form.pattern2 = val;
-      this.tabItemData[2].form.pattern3 = val;
-      this.tabItemData[3].form.pattern1 = val;
-      this.tabItemData[3].form.pattern2 = val;
-      this.tabItemData[3].form.pattern3 = val;
-    },
-    single1() {
-      this.$forceUpdate();
-    },
-    single2() {
-      this.$forceUpdate();
-    },
-    single3() {
-      this.$forceUpdate();
-    },
-    choiceNum() {
-      this.num11 = this.num;
-      this.num12 = this.num;
-      this.num13 = this.num;
-      this.num2 = this.num;
-      this.num3 = this.num;
-      this.num4 = this.num;
-    },
-    choiceForms() {},
-    ChoiceDriveForms() {
-      // console.log(this.DriveForms);
-    },
-
-    // 选中
-    getTdate(val, index) {
-      // console.log(val, index, "val, index");
-      this.current = index;
-      switch (val.id) {
-        case 0:
-          this.tabItemIndex = 0;
-          if (val.grType == "压制干扰") {
-            this.tabItemData[0].grType = "压制干扰";
-            this.tabItemData[0].form = val;
-          } else {
-            this.tabItemData[0].grType = "欺骗干扰";
-            this.tabItemData[0].form1 = val;
-          }
-          break;
-        case 1:
-          this.tabItemIndex = 1;
-          if (val.grType == "压制干扰") {
-            this.tabItemData[1].grType = "压制干扰";
-            this.tabItemData[1].form = val;
-          } else {
-            this.tabItemData[1].grType = "欺骗干扰";
-            this.tabItemData[1].form1 = val;
-          }
-          break;
-        case 2:
-          this.tabItemIndex = 2;
-          if (val.grType == "压制干扰") {
-            this.tabItemData[2].grType = "压制干扰";
-            this.tabItemData[2].form = val;
-          } else {
-            this.tabItemData[2].grType = "欺骗干扰";
-            this.tabItemData[2].form1 = val;
-          }
-          break;
-        case 3:
-          this.tabItemIndex = 3;
-          if (val.grType == "压制干扰") {
-            this.tabItemData[3].grType = "压制干扰";
-            this.tabItemData[3].form = val;
-          } else {
-            this.tabItemData[3].grType = "欺骗干扰";
-            this.tabItemData[3].form1 = val;
-          }
-          break;
+      for (let i = 0; i < 3; i++) {
+        this.tabItemData[i].form.mode1 = val;
+        this.tabItemData[i].form.mode2 = val;
+        this.tabItemData[i].form.mode3 = val;
       }
+    },
+    // 指令选中- 站点场景数据回显
+    getCmdData(val, index) {
+      console.log(val, index, "val, index-指令选中");
+      this.current = index;
+      this.tabItemIndex = val.id;
+      this.tabItemData[this.tabItemIndex].grType = val.grType;
+      this.tabItemData[this.tabItemIndex].InterfereTime = val.InterfereTime;
+      val.grType == "2"
+        ? (this.tabItemData[this.tabItemIndex].form = val)
+        : (this.tabItemData[this.tabItemIndex].form1 = val);
     },
     // 过滤 获取 mastetData 数据
     getMastetData() {
@@ -2130,18 +1794,17 @@ export default {
       const mastetData = [...this.masterStation];
       switch (this.tabItemIndex) {
         case 0:
-          if (this.tabItemData[0].grType == "压制干扰") {
+          if (this.tabItemData[0].grType == "2") {
             mastetData.push({
               grType: this.tabItemData[0].grType,
               id: 0,
               f1: "F1频段",
               tabs: this.tabItemData[0].name,
-              zai: this.zai,
               frequency1: this.tabItemData[0].form.frequency1,
-              pattern1: this.tabItemData[0].form.pattern1,
+              mode1: this.tabItemData[0].form.mode1,
               power1: this.tabItemData[0].form.power1,
               InterfereTime: this.tabItemData[0].form.InterfereTime, //时间或者位置
-              standard1: this.tabItemData[0].form.standard1, //点频干扰
+              type1: this.tabItemData[0].form.type1, //点频干扰
               dpgrZbpl1: this.tabItemData[0].form.dpgrZbpl1, //点频干扰(载波频1)
               tpgrZbpl1: this.tabItemData[0].form.tpgrZbpl1, //调频干扰(载波频1)
               tpgrTzpl1: this.tabItemData[0].form.tpgrTzpl1, //调频干扰(调制频1)
@@ -2165,9 +1828,8 @@ export default {
               //F2频段
               tabs1: this.tabItemData[0].name,
               f2: "F2频段",
-              zai1: "在",
               frequency2: this.tabItemData[0].form.frequency2, //
-              pattern2: this.tabItemData[0].form.pattern2,
+              mode2: this.tabItemData[0].form.mode2,
               power2: this.tabItemData[0].form.power2,
               dpgrZbpl2: this.tabItemData[0].form.dpgrZbpl2, //点频干扰
               tpgrZbpl2: this.tabItemData[0].form.tpgrZbpl2, //调频干扰
@@ -2192,9 +1854,8 @@ export default {
               //F3频段
               tabs2: this.tabItemData[0].name,
               f3: "F3频段",
-              zai2: "在",
               frequency3: this.tabItemData[0].form.frequency3, //
-              pattern3: this.tabItemData[0].form.pattern3,
+              mode3: this.tabItemData[0].form.mode3,
               power3: this.tabItemData[0].form.power3,
               dpgrZbpl3: this.tabItemData[0].form.dpgrZbpl3, //点频干扰
               tpgrZbpl3: this.tabItemData[0].form.tpgrZbpl3, //调频干扰
@@ -2223,7 +1884,6 @@ export default {
               id: 0,
               f1: "F1频段",
               tab: this.tabItemData[0].name,
-              zai: "在",
               f1Bit0: this.tabItemData[0].form1.f1Bit0,
               f1Bit1: this.tabItemData[0].form1.f1Bit1,
               f1Bit2: this.tabItemData[0].form1.f1Bit2,
@@ -2242,18 +1902,17 @@ export default {
           }
           break;
         case 1:
-          if (this.tabItemData[1].grType == "压制干扰") {
+          if (this.tabItemData[1].grType == "2") {
             mastetData.push({
               grType: this.tabItemData[1].grType,
               id: 1,
               f1: "F1频段",
               tabs: this.tabItemData[1].name,
-              zai: this.zai,
               frequency1: this.tabItemData[1].form.frequency1,
-              pattern1: this.tabItemData[1].form.pattern1,
+              mode1: this.tabItemData[1].form.mode1,
               power1: this.tabItemData[1].form.power1,
               InterfereTime: this.tabItemData[1].form.InterfereTime, //时间或者位置
-              standard1: this.tabItemData[1].form.standard1, //点频干扰
+              type1: this.tabItemData[1].form.type1, //点频干扰
               dpgrZbpl1: this.tabItemData[1].form.dpgrZbpl1, //点频干扰(载波频1)
               tpgrZbpl1: this.tabItemData[1].form.tpgrZbpl1, //调频干扰(载波频1)
               tpgrTzpl1: this.tabItemData[1].form.tpgrTzpl1, //调频干扰(调制频1)
@@ -2277,9 +1936,8 @@ export default {
               //F2频段
               tabs1: this.tabItemData[1].name,
               f2: "F2频段",
-              zai1: "在",
               frequency2: this.tabItemData[1].form.frequency2, //
-              pattern2: this.tabItemData[1].form.pattern2,
+              mode2: this.tabItemData[1].form.mode2,
               power2: this.tabItemData[1].form.power2,
               dpgrZbpl2: this.tabItemData[1].form.dpgrZbpl2, //点频干扰
               tpgrZbpl2: this.tabItemData[1].form.tpgrZbpl2, //调频干扰
@@ -2304,9 +1962,8 @@ export default {
               //F3频段
               tabs2: this.tabItemData[1].name,
               f3: "F3频段",
-              zai2: "在",
               frequency3: this.tabItemData[1].form.frequency3, //
-              pattern3: this.tabItemData[1].form.pattern3,
+              mode3: this.tabItemData[1].form.mode3,
               power3: this.tabItemData[1].form.power3,
               dpgrZbpl3: this.tabItemData[1].form.dpgrZbpl3, //点频干扰
               tpgrZbpl3: this.tabItemData[1].form.tpgrZbpl3, //调频干扰
@@ -2335,7 +1992,6 @@ export default {
               id: 0,
               f1: "F1频段",
               tab: this.tabItemData[1].name,
-              zai: "在",
               f1Bit0: this.tabItemData[1].form1.f1Bit0,
               f1Bit1: this.tabItemData[1].form1.f1Bit1,
               f1Bit2: this.tabItemData[1].form1.f1Bit2,
@@ -2355,18 +2011,17 @@ export default {
 
           break;
         case 2:
-          if (this.tabItemData[2].grType == "压制干扰") {
+          if (this.tabItemData[2].grType == "2") {
             mastetData.push({
               grType: this.tabItemData[2].grType,
               id: 0,
               f1: "F1频段",
               tabs: this.tabItemData[2].name,
-              zai: this.zai,
               frequency1: this.tabItemData[2].form.frequency1,
-              pattern1: this.tabItemData[2].form.pattern1,
+              mode1: this.tabItemData[2].form.mode1,
               power1: this.tabItemData[2].form.power1,
               InterfereTime: this.tabItemData[2].form.InterfereTime, //时间或者位置
-              standard1: this.tabItemData[2].form.standard1, //点频干扰
+              type1: this.tabItemData[2].form.type1, //点频干扰
               dpgrZbpl1: this.tabItemData[2].form.dpgrZbpl1, //点频干扰(载波频1)
               tpgrZbpl1: this.tabItemData[2].form.tpgrZbpl1, //调频干扰(载波频1)
               tpgrTzpl1: this.tabItemData[2].form.tpgrTzpl1, //调频干扰(调制频1)
@@ -2390,9 +2045,8 @@ export default {
               //F2频段
               tabs1: this.tabItemData[2].name,
               f2: "F2频段",
-              zai1: "在",
               frequency2: this.tabItemData[2].form.frequency2, //
-              pattern2: this.tabItemData[2].form.pattern2,
+              mode2: this.tabItemData[2].form.mode2,
               power2: this.tabItemData[2].form.power2,
               dpgrZbpl2: this.tabItemData[2].form.dpgrZbpl2, //点频干扰
               tpgrZbpl2: this.tabItemData[2].form.tpgrZbpl2, //调频干扰
@@ -2417,9 +2071,8 @@ export default {
               //F3频段
               tabs2: this.tabItemData[2].name,
               f3: "F3频段",
-              zai2: "在",
               frequency3: this.tabItemData[2].form.frequency3, //
-              pattern3: this.tabItemData[2].form.pattern3,
+              mode3: this.tabItemData[2].form.mode3,
               power3: this.tabItemData[2].form.power3,
               dpgrZbpl3: this.tabItemData[2].form.dpgrZbpl3, //点频干扰
               tpgrZbpl3: this.tabItemData[2].form.tpgrZbpl3, //调频干扰
@@ -2448,7 +2101,6 @@ export default {
               id: 0,
               f1: "F1频段",
               tab: this.tabItemData[2].name,
-              zai: "在",
               f1Bit0: this.tabItemData[2].form1.f1Bit0,
               f1Bit1: this.tabItemData[2].form1.f1Bit1,
               f1Bit2: this.tabItemData[2].form1.f1Bit2,
@@ -2467,18 +2119,17 @@ export default {
           }
           break;
         case 3:
-          if (this.tabItemData[3].grType == "压制干扰") {
+          if (this.tabItemData[3].grType == "2") {
             mastetData.push({
               grType: this.tabItemData[3].grType,
               id: 0,
               f1: "F1频段",
               tabs: this.tabItemData[3].name,
-              zai: this.zai,
               frequency1: this.tabItemData[3].form.frequency1,
-              pattern1: this.tabItemData[3].form.pattern1,
+              mode1: this.tabItemData[3].form.mode1,
               power1: this.tabItemData[3].form.power1,
               InterfereTime: this.tabItemData[3].form.InterfereTime, //时间或者位置
-              standard1: this.tabItemData[3].form.standard1, //点频干扰
+              type1: this.tabItemData[3].form.type1, //点频干扰
               dpgrZbpl1: this.tabItemData[3].form.dpgrZbpl1, //点频干扰(载波频1)
               tpgrZbpl1: this.tabItemData[3].form.tpgrZbpl1, //调频干扰(载波频1)
               tpgrTzpl1: this.tabItemData[3].form.tpgrTzpl1, //调频干扰(调制频1)
@@ -2502,9 +2153,8 @@ export default {
               //F2频段
               tabs1: this.tabItemData[3].name,
               f2: "F2频段",
-              zai1: "在",
               frequency2: this.tabItemData[3].form.frequency2, //
-              pattern2: this.tabItemData[3].form.pattern2,
+              mode2: this.tabItemData[3].form.mode2,
               power2: this.tabItemData[3].form.power2,
               dpgrZbpl2: this.tabItemData[3].form.dpgrZbpl2, //点频干扰
               tpgrZbpl2: this.tabItemData[3].form.tpgrZbpl2, //调频干扰
@@ -2529,9 +2179,8 @@ export default {
               //F3频段
               tabs2: this.tabItemData[3].name,
               f3: "F3频段",
-              zai2: "在",
               frequency3: this.tabItemData[3].form.frequency3, //
-              pattern3: this.tabItemData[3].form.pattern3,
+              mode3: this.tabItemData[3].form.mode3,
               power3: this.tabItemData[3].form.power3,
               dpgrZbpl3: this.tabItemData[3].form.dpgrZbpl3, //点频干扰
               tpgrZbpl3: this.tabItemData[3].form.tpgrZbpl3, //调频干扰
@@ -2560,7 +2209,6 @@ export default {
               id: 0,
               f1: "F1频段",
               tab: this.tabItemData[3].name,
-              zai: "在",
               f1Bit0: this.tabItemData[3].form1.f1Bit0,
               f1Bit1: this.tabItemData[3].form1.f1Bit1,
               f1Bit2: this.tabItemData[3].form1.f1Bit2,
@@ -2583,26 +2231,23 @@ export default {
       // console.log(this.form1,"form");
       return mastetData;
     },
-    // 修改
+    // 修改指令-面板修改后-指令同步更新TODO:
     changeData() {
       const i = this.current;
       switch (this.tabItemIndex) {
         case 0:
-          if (this.tabItemData[0].grType == "压制干扰") {
-            (this.masterStation[i].grType = "压制干扰"),
+          if (this.tabItemData[0].grType == "2") {
+            (this.masterStation[i].grType = "2"),
               (this.masterStation[i].id = 0),
               (this.masterStation[i].f1 = "F1频段"),
               (this.masterStation[i].tabs = this.tabItemData[0].name),
-              (this.masterStation[i].zai = this.zai),
               (this.masterStation[i].frequency1 =
                 this.tabItemData[0].form.frequency1),
-              (this.masterStation[i].pattern1 =
-                this.tabItemData[0].form.pattern1),
+              (this.masterStation[i].mode1 = this.tabItemData[0].form.mode1),
               (this.masterStation[i].power1 = this.tabItemData[0].form.power1),
               (this.masterStation[i].InterfereTime =
                 this.tabItemData[0].InterfereTime), //时间或者位置
-              (this.masterStation[i].standard1 =
-                this.tabItemData[0].form.standard1), //点频干扰
+              (this.masterStation[i].type1 = this.tabItemData[0].form.type1), //点频干扰
               (this.masterStation[i].dpgrZbpl1 =
                 this.tabItemData[0].form.dpgrZbpl1), //点频干扰(载波频1)
               (this.masterStation[i].tpgrZbpl1 =
@@ -2646,11 +2291,9 @@ export default {
               //F2频段
               (this.masterStation[i].tabs1 = this.tabItemData[0].name),
               (this.masterStation[i].f2 = "F2频段"),
-              (this.masterStation[i].zai1 = "在"),
               (this.masterStation[i].frequency2 =
                 this.tabItemData[0].form.frequency2), //
-              (this.masterStation[i].pattern2 =
-                this.tabItemData[0].form.pattern2),
+              (this.masterStation[i].mode2 = this.tabItemData[0].form.mode2),
               (this.masterStation[i].power2 = this.tabItemData[0].form.power2),
               (this.masterStation[i].dpgrZbpl2 =
                 this.tabItemData[0].form.dpgrZbpl2), //点频干扰
@@ -2695,11 +2338,9 @@ export default {
               //F3频段
               (this.masterStation[i].tabs2 = this.tabItemData[0].name),
               (this.masterStation[i].f3 = "F3频段"),
-              (this.masterStation[i].zai2 = "在"),
               (this.masterStation[i].frequency3 =
                 this.tabItemData[0].form.frequency3), //
-              (this.masterStation[i].pattern3 =
-                this.tabItemData[0].form.pattern3),
+              (this.masterStation[i].mode3 = this.tabItemData[0].form.mode3),
               (this.masterStation[i].power3 = this.tabItemData[0].form.power3),
               (this.masterStation[i].dpgrZbpl3 =
                 this.tabItemData[0].form.dpgrZbpl3), //点频干扰
@@ -2742,11 +2383,10 @@ export default {
               (this.masterStation[i].mcgrZq3 =
                 this.tabItemData[0].form.mcgrZq3); //脉冲干扰
           } else {
-            (this.masterStation[i].grType = "欺骗干扰"),
+            (this.masterStation[i].grType = "2"),
               (this.masterStation[i].id = 0),
               (this.masterStation[i].f1 = "F1频段"),
               (this.masterStation[i].tab = this.tabItemData[0].name),
-              (this.masterStation[i].zai = "在"),
               (this.masterStation[i].f1Bit0 = this.tabItemData[0].form1.f1Bit0),
               (this.masterStation[i].f1Bit1 = this.tabItemData[0].form1.f1Bit1),
               (this.masterStation[i].f1Bit2 = this.tabItemData[0].form1.f1Bit2),
@@ -2765,21 +2405,18 @@ export default {
 
           break;
         case 1:
-          if (this.tabItemData[1].grType == "压制干扰") {
-            (this.masterStation[i].grType = "压制干扰"),
+          if (this.tabItemData[1].grType == "2") {
+            (this.masterStation[i].grType = "2"),
               (this.masterStation[i].id = 1),
               (this.masterStation[i].f1 = "F1频段"),
               (this.masterStation[i].tabs = this.tabItemData[1].name),
-              (this.masterStation[i].zai = this.zai),
               (this.masterStation[i].frequency1 =
                 this.tabItemData[1].form.frequency1),
-              (this.masterStation[i].pattern1 =
-                this.tabItemData[1].form.pattern1),
+              (this.masterStation[i].mode1 = this.tabItemData[1].form.mode1),
               (this.masterStation[i].power1 = this.tabItemData[1].form.power1),
               (this.masterStation[i].InterfereTime =
                 this.tabItemData[1].InterfereTime), //时间或者位置
-              (this.masterStation[i].standard1 =
-                this.tabItemData[1].form.standard1), //点频干扰
+              (this.masterStation[i].type1 = this.tabItemData[1].form.type1), //点频干扰
               (this.masterStation[i].dpgrZbpl1 =
                 this.tabItemData[1].form.dpgrZbpl1), //点频干扰(载波频1)
               (this.masterStation[i].tpgrZbpl1 =
@@ -2823,11 +2460,9 @@ export default {
               //F2频段
               (this.masterStation[i].tabs1 = this.tabItemData[1].name),
               (this.masterStation[i].f2 = "F2频段"),
-              (this.masterStation[i].zai1 = "在"),
               (this.masterStation[i].frequency2 =
                 this.tabItemData[1].form.frequency2), //
-              (this.masterStation[i].pattern2 =
-                this.tabItemData[1].form.pattern2),
+              (this.masterStation[i].mode2 = this.tabItemData[1].form.mode2),
               (this.masterStation[i].power2 = this.tabItemData[1].form.power2),
               (this.masterStation[i].dpgrZbpl2 =
                 this.tabItemData[1].form.dpgrZbpl2), //点频干扰
@@ -2872,11 +2507,9 @@ export default {
               //F3频段
               (this.masterStation[i].tabs2 = this.tabItemData[1].name),
               (this.masterStation[i].f3 = "F3频段"),
-              (this.masterStation[i].zai2 = "在"),
               (this.masterStation[i].frequency3 =
                 this.tabItemData[1].form.frequency3), //
-              (this.masterStation[i].pattern3 =
-                this.tabItemData[1].form.pattern3),
+              (this.masterStation[i].mode3 = this.tabItemData[1].form.mode3),
               (this.masterStation[i].power3 = this.tabItemData[1].form.power3),
               (this.masterStation[i].dpgrZbpl3 =
                 this.tabItemData[1].form.dpgrZbpl3), //点频干扰
@@ -2919,11 +2552,10 @@ export default {
               (this.masterStation[i].mcgrZq3 =
                 this.tabItemData[1].form.mcgrZq3); //脉冲干扰
           } else {
-            (this.masterStation[i].grType = "欺骗干扰"),
+            (this.masterStation[i].grType = "5"),
               (this.masterStation[i].id = 0),
               (this.masterStation[i].f1 = "F1频段"),
               (this.masterStation[i].tab = this.tabItemData[1].name),
-              (this.masterStation[i].zai = "在"),
               (this.masterStation[i].f1Bit0 = this.tabItemData[1].form1.f1Bit0),
               (this.masterStation[i].f1Bit1 = this.tabItemData[1].form1.f1Bit1),
               (this.masterStation[i].f1Bit2 = this.tabItemData[1].form1.f1Bit2),
@@ -2942,21 +2574,18 @@ export default {
 
           break;
         case 2:
-          if (this.tabItemData[2].grType == "压制干扰") {
-            (this.masterStation[i].grType = "压制干扰"),
+          if (this.tabItemData[2].grType == "2") {
+            (this.masterStation[i].grType = "2"),
               (this.masterStation[i].id = 2),
               (this.masterStation[i].f1 = "F1频段"),
               (this.masterStation[i].tabs = this.tabItemData[2].name),
-              (this.masterStation[i].zai = this.zai),
               (this.masterStation[i].frequency1 =
                 this.tabItemData[2].form.frequency1),
-              (this.masterStation[i].pattern1 =
-                this.tabItemData[2].form.pattern1),
+              (this.masterStation[i].mode1 = this.tabItemData[2].form.mode1),
               (this.masterStation[i].power1 = this.tabItemData[2].form.power1),
               (this.masterStation[i].InterfereTime =
                 this.tabItemData[2].InterfereTime), //时间或者位置
-              (this.masterStation[i].standard1 =
-                this.tabItemData[2].form.standard1), //点频干扰
+              (this.masterStation[i].type1 = this.tabItemData[2].form.type1), //点频干扰
               (this.masterStation[i].dpgrZbpl1 =
                 this.tabItemData[2].form.dpgrZbpl1), //点频干扰(载波频1)
               (this.masterStation[i].tpgrZbpl1 =
@@ -3000,11 +2629,9 @@ export default {
               //F2频段
               (this.masterStation[i].tabs1 = this.tabItemData[2].name),
               (this.masterStation[i].f2 = "F2频段"),
-              (this.masterStation[i].zai1 = "在"),
               (this.masterStation[i].frequency2 =
                 this.tabItemData[2].form.frequency2), //
-              (this.masterStation[i].pattern2 =
-                this.tabItemData[2].form.pattern2),
+              (this.masterStation[i].mode2 = this.tabItemData[2].form.mode2),
               (this.masterStation[i].power2 = this.tabItemData[2].form.power2),
               (this.masterStation[i].dpgrZbpl2 =
                 this.tabItemData[2].form.dpgrZbpl2), //点频干扰
@@ -3049,11 +2676,9 @@ export default {
               //F3频段
               (this.masterStation[i].tabs2 = this.tabItemData[2].name),
               (this.masterStation[i].f3 = "F3频段"),
-              (this.masterStation[i].zai2 = "在"),
               (this.masterStation[i].frequency3 =
                 this.tabItemData[2].form.frequency3), //
-              (this.masterStation[i].pattern3 =
-                this.tabItemData[2].form.pattern3),
+              (this.masterStation[i].mode3 = this.tabItemData[2].form.mode3),
               (this.masterStation[i].power3 = this.tabItemData[2].form.power3),
               (this.masterStation[i].dpgrZbpl3 =
                 this.tabItemData[2].form.dpgrZbpl3), //点频干扰
@@ -3096,11 +2721,10 @@ export default {
               (this.masterStation[i].mcgrZq3 =
                 this.tabItemData[2].form.mcgrZq3); //脉冲干扰
           } else {
-            (this.masterStation[i].grType = "欺骗干扰"),
+            (this.masterStation[i].grType = "5"),
               (this.masterStation[i].id = 0),
               (this.masterStation[i].f1 = "F1频段"),
               (this.masterStation[i].tab = this.tabItemData[2].name),
-              (this.masterStation[i].zai = "在"),
               (this.masterStation[i].f1Bit0 = this.tabItemData[2].form1.f1Bit0),
               (this.masterStation[i].f1Bit1 = this.tabItemData[2].form1.f1Bit1),
               (this.masterStation[i].f1Bit2 = this.tabItemData[2].form1.f1Bit2),
@@ -3118,21 +2742,18 @@ export default {
           }
           break;
         case 3:
-          if (this.tabItemData[3].grType == "压制干扰") {
-            (this.masterStation[i].grType = "压制干扰"),
+          if (this.tabItemData[3].grType == "2") {
+            (this.masterStation[i].grType = "2"),
               (this.masterStation[i].id = 3),
               (this.masterStation[i].f1 = "F1频段"),
               (this.masterStation[i].tabs = this.tabItemData[3].name),
-              (this.masterStation[i].zai = this.zai),
               (this.masterStation[i].frequency1 =
                 this.tabItemData[3].form.frequency1),
-              (this.masterStation[i].pattern1 =
-                this.tabItemData[3].form.pattern1),
+              (this.masterStation[i].mode1 = this.tabItemData[3].form.mode1),
               (this.masterStation[i].power1 = this.tabItemData[3].form.power1),
               (this.masterStation[i].InterfereTime =
                 this.tabItemData[3].InterfereTime), //时间或者位置
-              (this.masterStation[i].standard1 =
-                this.tabItemData[3].form.standard1), //点频干扰
+              (this.masterStation[i].type1 = this.tabItemData[3].form.type1), //点频干扰
               (this.masterStation[i].dpgrZbpl1 =
                 this.tabItemData[3].form.dpgrZbpl1), //点频干扰(载波频1)
               (this.masterStation[i].tpgrZbpl1 =
@@ -3176,11 +2797,9 @@ export default {
               //F2频段
               (this.masterStation[i].tabs1 = this.tabItemData[3].name),
               (this.masterStation[i].f2 = "F2频段"),
-              (this.masterStation[i].zai1 = "在"),
               (this.masterStation[i].frequency2 =
                 this.tabItemData[3].form.frequency2), //
-              (this.masterStation[i].pattern2 =
-                this.tabItemData[3].form.pattern2),
+              (this.masterStation[i].mode2 = this.tabItemData[3].form.mode2),
               (this.masterStation[i].power2 = this.tabItemData[3].form.power2),
               (this.masterStation[i].dpgrZbpl2 =
                 this.tabItemData[3].form.dpgrZbpl2), //点频干扰
@@ -3225,11 +2844,9 @@ export default {
               //F3频段
               (this.masterStation[i].tabs2 = this.tabItemData[3].name),
               (this.masterStation[i].f3 = "F3频段"),
-              (this.masterStation[i].zai2 = "在"),
               (this.masterStation[i].frequency3 =
                 this.tabItemData[3].form.frequency3), //
-              (this.masterStation[i].pattern3 =
-                this.tabItemData[3].form.pattern3),
+              (this.masterStation[i].mode3 = this.tabItemData[3].form.mode3),
               (this.masterStation[i].power3 = this.tabItemData[3].form.power3),
               (this.masterStation[i].dpgrZbpl3 =
                 this.tabItemData[3].form.dpgrZbpl3), //点频干扰
@@ -3272,11 +2889,10 @@ export default {
               (this.masterStation[i].mcgrZq3 =
                 this.tabItemData[3].form.mcgrZq3); //脉冲干扰
           } else {
-            (this.masterStation[i].grType = "欺骗干扰"),
+            (this.masterStation[i].grType = "5"),
               (this.masterStation[i].id = 0),
               (this.masterStation[i].f1 = "F1频段"),
               (this.masterStation[i].tab = this.tabItemData[3].name),
-              (this.masterStation[i].zai = "在"),
               (this.masterStation[i].f1Bit0 = this.tabItemData[3].form1.f1Bit0),
               (this.masterStation[i].f1Bit1 = this.tabItemData[3].form1.f1Bit1),
               (this.masterStation[i].f1Bit2 = this.tabItemData[3].form1.f1Bit2),
@@ -3294,51 +2910,13 @@ export default {
           }
           break;
       }
-
       this.$message({
         message: "修改成功",
         type: "success",
       });
       this.current = null;
     },
-    add0(m) {
-      return m < 10 ? "0" + m : m;
-    },
-    formatDate() {
-      var time = new Date();
-      var y = time.getFullYear();
-      var m = time.getMonth() + 1;
-      var d = time.getDate();
-      var h = time.getHours();
-      var mm = time.getMinutes();
-      var s = time.getSeconds();
-
-      this.timestamp =
-        y +
-        "-" +
-        this.add0(m) +
-        "-" +
-        this.add0(d) +
-        " " +
-        this.add0(h) +
-        ":" +
-        this.add0(mm) +
-        ":" +
-        this.add0(s);
-      return (
-        y +
-        "-" +
-        this.add0(m) +
-        "-" +
-        this.add0(d) +
-        " " +
-        this.add0(h) +
-        ":" +
-        this.add0(mm) +
-        ":" +
-        this.add0(s)
-      );
-    },
+    // TODO: websocket长链接持续渲染需要重做
     animateReceiveData() {
       let animateInterval = null;
       if (animateInterval != null) {
@@ -3382,226 +2960,173 @@ export default {
         );
       }, 1000);
     },
-    //保存新场景
-    save() {
-      this.dialogVisible = false;
-      this.visible = true;
+    //保存场景
+    async saveScene() {
+      try {
+        if (!this.sceneId) {
+          this.$message({
+            message: "请先选择场景！",
+            type: "error",
+          });
+          return;
+        }
+        let sceneFilter = this.sceneOptions.filter(
+          (item) => item.id === this.sceneId
+        );
+        let param = this.handleSaveSceneData(); // *处理场景保存的数据*
+        const { result } = await this.$api.saveScene({
+          scene_id: this.sceneId,
+          scene_name: sceneFilter[0].name,
+          station: this.stationList,
+          track: this.trackList,
+          param,
+        });
+        console.log(result);
+        this.$message({
+          message: "保存成功",
+          type: "success",
+        });
+        this.saveDialogVisible = false;
+      } catch (error) {
+        console.log(error);
+        this.$message({
+          message: "保存失败",
+          type: "error",
+        });
+      }
+    },
+    // 处理场景保存的数据
+    handleSaveSceneData() {
+      console.log(this.masterStation, "场景返回数据处理后");
+      let cmd = []; // 指令集合
+      this.masterStation.forEach((item) => {
+        if (item.grType == 2) {
+          cmd.push({
+            frameType: 2,
+            station_id: item.id,
+            indicator: item.indicator,
+            f1: {
+              mode: item.mode1, // 干扰模式
+              type: item.type1, // 干扰制式
+              power: item.power1,
+              value: this.handleTypeValue(item.type1, item, 1),
+            },
+            f2: {
+              mode: item.mode2, // 干扰模式
+              type: item.mode2, // 干扰制式
+              power: item.power2,
+              value: this.handleTypeValue(item.type2, item, 2),
+            },
+            f3: {
+              mode: item.mode3, // 干扰模式
+              type: item.type3, // 干扰制式
+              power: item.power3,
+              value: this.handleTypeValue(item.type3, item, 3),
+            },
+          });
+        } else {
+          cmd.push({
+            frameType: 2,
+            station_id: item.id,
+            indicator: item.indicator,
+            cheat_coordinate: [item.jingdu, item.weidu, item.gaodu],
+            f1: parseInt(
+              item.f1Bit0 + item.f1Bit1 + item.f1Bit2 + item.f1Bit3,
+              2
+            ),
+            f2: parseInt(
+              item.f2Bit0 + item.f2Bit1 + item.f2Bit2 + item.f2Bit3,
+              2
+            ),
+            f3: parseInt(
+              item.f3Bit0 + item.f3Bit1 + item.f3Bit2 + item.f3Bit3,
+              2
+            ),
+          });
+        }
+      });
+      return {
+        number: this.number,
+        limit: this.ganxinbi,
+        condition: this.driveValue, // time or location
+        cmd,
+      };
     },
     //清空数据
     empty() {
       this.masterStation = [];
-      this.num.value = "";
-      this.driveValue = "时间";
+      this.number = "";
+      this.driveValue = "time";
       this.ganxinbi = "";
-      this.tabItemData.forEach((el) => {
-        console.log(el);
-        if (el.grType == "欺骗干扰") {
-          el.grType = "压制干扰";
-        } else if (el.grType == "压制干扰") {
-          el.grType = "欺骗干扰";
+    },
+    // 场景另存为新场景弹框唤起
+    newSaveScene() {
+      this.saveDialogVisible = false;
+      this.newScenedialog = true;
+    },
+    //布局判决 判决之后打点判别-绘制颜色
+    async layoutValidate() {
+      try {
+        if (!this.sceneId) {
+          this.$message({
+            type: "error",
+            message: "请先选择场景!",
+          });
+          return;
         }
-      });
-    },
-    //覆盖原场景
-    cover() {
-      this.dialogVisible = false;
-      this.dialog = true;
-    },
-    //布局判决
-    bujupanjue() {
-      //let param = []
-      let track = this.trackSplitList;
-      let data = {
-        param: this.tabItemData, //后端数据
-        id: this.id,
-        name: this.valueScene,
-        frequencyOne: this.frequencyOne.value,
-        patternOne: this.patternOne.value,
-        num: this.num.value,
-        DriveForms: this.driveValue,
-        ganxinbi: this.ganxinbi,
-      };
-      console.log(track);
-      console.log(data);
-      let params = {
-        name: "layoutValidate",
-        app_key: "sixteen",
-        data: "",
-        version: "",
-        timestamp: this.timestamp,
-        format: "json",
-      };
-      params.sign = this.buildSign(params);
-      axios
-        .post("http://streamwind.picp.vip:14028/api", {
-          name: "layoutValidate",
-          app_key: "sixteen",
-          data: "",
-          version: "",
-          timestamp: this.timestamp,
-          sign: params.sign,
-          format: "json",
-        })
-        .then((res) => {
-          // console.log(res);
-          if (res.data.data.station[0].flag == false) {
-            this.stationcolor1 = "purple";
-            // console.log(this.stationcolor1);
-          } else {
-            this.stationcolor1 = "green";
-            // console.log(this.stationcolor1);
-          }
-          if (res.data.data.track[1].flag == false) {
-            this.stationcolor2 = "purple";
-          } else {
-            this.stationcolor2 = "green";
-          }
-          if (res.data.data.track[2].flag == false) {
-            this.stationcolor3 = "purple";
-          } else {
-            this.stationcolor3 = "green";
-          }
-          if (res.data.data.track[3].flag == false) {
-            this.stationcolor4 = "purple";
-          } else {
-            this.stationcolor4 = "green";
-          }
-          // console.log(res.data.data.track);
-          // console.log(res.data.data.track[0].flag);
-          // console.log(res.data.data.track[1].flag);
-          // console.log(res.data.data.track[2].flag);
-          // console.log(res.data.data.track[3].flag);
-          if (res.data.data.track[0].flag == false) {
-            this.trackcolor1 = "purple";
-          } else {
-            this.trackcolor1 = "green";
-          }
-          if (res.data.data.track[1].flag == false) {
-            this.trackcolor2 = "purple";
-          } else {
-            this.trackcolor2 = "green";
-          }
-          if (res.data.data.track[2].flag == false) {
-            this.trackcolor3 = "purple";
-          } else {
-            this.color3 = "green";
-          }
-          if (res.data.data.track[3].flag == false) {
-            this.trackcolor4 = "purple";
-          } else {
-            this.trackcolor4 = "green";
-          }
-          // let msg = JSON.parse(JSON.stringify(res.data.data))
-          // console.log(msg);
-          this.setStations();
+        const { result } = await this.$api.layoutValidate({
+          station: this.stationList,
+          track: this.trackList,
         });
-      this.addTargetHistory();
+        console.log(result);
+        // false:purple  true:green
+        this.setStations();
+      } catch (error) {
+        console.log(error);
+      }
     },
-    //  addTargetHistory() {
-    //   let targetHistoryData = [
-    //     {
-    //       id: '111',
-    //       properties: { 时间: "2022-02-28", 运行状态: "在线", 姿态角: "140", 速度: "200KM/H" },
-    //       coordinates: this.coordinatesOne,
-    //     },
-    //     {
-    //       id: 23,
-    //       properties: { 时间: "2022-02-29", 运行状态: "在线", 姿态角: "120", 速度: "100KM/H" },
-    //       coordinates: this.coordinatesTwo,
-    //     },
-    //     {
-    //       id: 33,
-    //       properties: { 时间: "2022-03-28", 运行状态: "在线", 姿态角: "100", 速度: "220KM/H" },
-    //       coordinates: this.coordinatesThree,
-    //     },
-    //     {
-    //       id: 44,
-    //       properties: { 时间: "2022-03-28", 运行状态: "在线", 姿态角: "80", 速度: "220KM/H" },
-    //       coordinates: this.coordinatesFour,
-    //     },
-    //   ];
-    //   window.mapFrame.postMessage(
-    //     {
-    //       cmd: "addTargetHistory", //在地图中添加站点
-    //       params: {
-    //         history: targetHistoryData,
-    //         historyClickAble: true,//轨迹点是否可点击，启用该参数后，点击轨迹点，会将所点击轨迹点对应的id及经纬度回传给主程序
-    //       },
-    //     },
-    //     "*"
-    //   );
-    // },
+    // 添加目标轨迹
     addTargetHistory() {
       let targetHistoryData = [
-        {
-          id: "111",
-          properties: {
-            时间: "2022-02-28",
-            运行状态: "在线",
-            姿态角: "140",
-            速度: "200KM/H",
-          },
-          coordinates: this.coordinatesOne,
-          styles: {
-            lineColor: "#FF0099", //圆边线颜色
-            lineWidth: 2, //圆边线宽度
-            radius: 6, //圆半径大小
-            fillColor: this.trackcolor1, //圆填充色
-            opacity: 0.5, //透明度，取值范围[0-1]，1代表完全不透明
-          },
-        },
-        {
-          id: 23,
-          properties: {
-            时间: "2022-02-29",
-            运行状态: "在线",
-            姿态角: "120",
-            速度: "100KM/H",
-          },
-          coordinates: this.coordinatesTwo,
-          styles: {
-            lineColor: "#0000FF", //圆边线颜色
-            lineWidth: 2, //圆边线宽度
-            radius: 6, //圆半径大小
-            fillColor: this.trackcolor2, //圆填充色
-            opacity: 0.2, //透明度，取值范围[0-1]，1代表完全不透明
-          },
-        },
-        {
-          id: 33,
-          properties: {
-            时间: "2022-03-28",
-            运行状态: "在线",
-            姿态角: "100",
-            速度: "220KM/H",
-          },
-          coordinates: this.coordinatesThree,
-          styles: {
-            lineColor: "#FF00FF", //圆边线颜色
-            lineWidth: 3, //圆边线宽度
-            radius: 3, //圆半径大小
-            fillColor: this.trackcolor3, //圆填充色
-            opacity: 1, //透明度，取值范围[0-1]，1代表完全不透明
-          },
-        },
-        {
-          id: 44,
-          properties: {
-            时间: "2022-03-28",
-            运行状态: "在线",
-            姿态角: "100",
-            速度: "220KM/H",
-          },
-          coordinates: this.coordinatesFour,
-          styles: {
-            lineColor: "#FF00FF", //圆边线颜色
-            lineWidth: 3, //圆边线宽度
-            radius: 3, //圆半径大小
-            fillColor: this.trackcolor4, //圆填充色
-            opacity: 1, //透明度，取值范围[0-1]，1代表完全不透明
-          },
-        },
+        // {
+        //   id: "111",
+        //   properties: {
+        //     时间: "2022-02-28",
+        //     运行状态: "在线",
+        //     姿态角: "140",
+        //     速度: "200KM/H",
+        //   },
+        //   coordinates: this.coordinates,
+        //   styles: {
+        //     lineColor: "#FF0099", //圆边线颜色
+        //     lineWidth: 2, //圆边线宽度
+        //     radius: 6, //圆半径大小
+        //     fillColor: this.trackcolor1, //圆填充色
+        //     opacity: 0.5, //透明度，取值范围[0-1]，1代表完全不透明
+        //   },
+        // },
       ];
+      this.trackList.forEach((track) => {
+        let fillColor = "darkblue";
+        if (track.flag + "" == "true") {
+          fillColor = "green";
+        } else if (track.flag + "" == "false") {
+          fillColor = "purple";
+        }
+        targetHistoryData.push({
+          id: track.id,
+          properties: {
+            // 时间: "",
+            运行状态: "在线",
+            // 姿态角: "140",
+            速度: track.v + "m/s",
+          },
+          coordinates: track.coordinates,
+          styles: {
+            fillColor,
+          },
+        });
+      });
       window.mapFrame.postMessage(
         {
           cmd: "addTargetHistory", //在地图中目标历史轨迹
@@ -3613,406 +3138,406 @@ export default {
         "*"
       );
     },
-    //信息展示
-    messageshow() {
-      let params = {
-        name: "messageDisplay",
-        app_key: "sixteen",
-        data: "",
-        version: "",
-        timestamp: this.timestamp,
-        format: "json",
-      };
-      params.sign = this.buildSign(params);
-      axios
-        .post("http://streamwind.picp.vip:14028/api", {
-          name: "messageDisplay",
-          app_key: "sixteen",
-          data: "",
-          version: "",
-          timestamp: this.timestamp,
-          sign: params.sign,
-          format: "json",
-        })
-        .then((res) => {
-          console.log(res);
-          res.data.data.map((el) => {
-            console.log(el.coordinate);
-            this.testData.push(el.coordinate);
+    //信息展示TODO: websocket
+    messageShow() {
+      // this.animateReceiveData();
+      // this.testData.push();
+    },
+    //开始执行 & 结束执行 & 模拟飞行 三合一 因参数一样，功能相似可以合并
+    async taskAndFlight(taskName) {
+      try {
+        if (!this.sceneId) {
+          this.$message({
+            type: "error",
+            message: "请先选择场景!",
           });
-          this.animateReceiveData();
+          return;
+        }
+        await this.$api[taskName]({
+          scene_id: this.sceneId,
         });
-    },
-    //开始执行
-    start() {
-      let params = {
-        name: "startTask",
-        app_key: "sixteen",
-        data: "",
-        version: "",
-        timestamp: this.timestamp,
-        format: "json",
-      };
-      params.sign = this.buildSign(params);
-      axios
-        .post("http://streamwind.picp.vip:14028/api", {
-          name: "startTask",
-          app_key: "sixteen",
-          data: "",
-          version: "",
-          timestamp: this.timestamp,
-          sign: params.sign,
-          format: "json",
-        })
-        .then((res) => {
-          // console.log(res);
-          if (res.data.data.result == "ok") {
-            this.$message({
-              type: "success",
-              message: "开始执行成功",
-            });
-          } else {
-            this.$message({
-              type: "error",
-              message: "开始执行失败",
-            });
-          }
+        let message = "";
+        if (taskName == "startTask") {
+          message = "开始执行任务成功";
+        } else if (taskName == "terminateTask") {
+          message = "结束任务成功";
+        } else {
+          message = "模拟飞行成功";
+        }
+        this.$message({
+          type: "success",
+          message,
         });
-    },
-    //结束执行
-    over() {
-      let params = {
-        name: "terminateTask",
-        app_key: "sixteen",
-        data: "",
-        version: "",
-        timestamp: this.timestamp,
-        format: "json",
-      };
-      params.sign = this.buildSign(params);
-      axios
-        .post("http://streamwind.picp.vip:14028/api", {
-          name: "terminateTask",
-          app_key: "sixteen",
-          data: "",
-          version: "",
-          timestamp: this.timestamp,
-          sign: params.sign,
-          format: "json",
-        })
-        .then((res) => {
-          // console.log(res);
-          if (res.data.data.result == "ok") {
-            this.$message({
-              type: "success",
-              message: "结束执行成功",
-            });
-          } else {
-            this.$message({
-              type: "error",
-              message: "结束执行失败",
-            });
-          }
+      } catch (error) {
+        this.$message({
+          type: "error",
+          message: "执行失败，请重试！",
         });
-    },
-
-    getnewArr(arr, num) {
-      let newArr = [];
-      const total = Math.ceil(arr.length / num);
-      // console.log(total);
-      for (let i = 0; i < total; i++) {
-        let a = arr.slice(i * num, (i + 1) * num);
-        newArr.push(a);
       }
-      return newArr;
     },
-    //仿真验证
-    fangzhenyanzheng() {
-      this.fzdialogVisible = true;
-      this.getData();
-      //     let params = {
-      //   name: "simulationValidate",
-      //   app_key: "sixteen",
-      //   data: "",
-      //   version: "",
-      //   timestamp: this.timestamp,
-      //   format: "json",
-      // };
-      // params.sign = this.buildSign(params);
-      //    axios
-      //   .post("http://streamwind.picp.vip:14028/api", {
-
-      //     name: "simulationValidate",
-      //     app_key: "sixteen",
-      //     data: "",
-      //     version: "",
-      //     timestamp: this.timestamp,
-      //     sign: params.sign,
-      //     format: "json",
-      //   }).then((res => {
-      //     console.log(res);
-      //   }))
-    },
-    // 发送
-    sendCommand() {
-      console.log(this.driveValue);
-      console.log(this.tabItemData);
-      console.log(this.tabItemIndex);
-      let track = this.trackSplitList;
-      let cmd = {
-        param: this.tabItemData, //后端数据
-        id: this.id,
-        name: this.valueScene,
-        frequencyOne: this.frequencyOne.value,
-        patternOne: this.patternOne.value,
-        num: this.num.value,
-        DriveForms: this.driveValue,
-        ganxinbi: this.ganxinbi,
-      };
-      console.log(track);
-      console.log(cmd);
-      let params = {
-        name: "saveScene",
-        app_key: "sixteen",
-        data: "",
-        version: "",
-        timestamp: this.timestamp,
-        format: "json",
-      };
-      params.sign = this.buildSign(params);
-      axios
-        .post("http://streamwind.picp.vip:14028/api", {
-          tabItemData: this.tabItemData,
-          name: "saveScene",
-          app_key: "sixteen",
-          data: "",
-          version: "",
-          timestamp: this.timestamp,
-          sign: params.sign,
-          format: "json",
-        })
-        .then((res) => {
-          // console.log(res);
-          if (res.data.data.result == "ok") {
-            this.$message({
-              type: "success",
-              message: "发送成功",
-            });
-          } else {
-            this.$message({
-              type: "error",
-              message: "发送失败",
-            });
-          }
+    // 发送指令
+    async sendCommand() {
+      try {
+        console.log(this.driveValue, "driveValue");
+        console.log(this.tabItemData, "tabItemData");
+        console.log(this.tabItemIndex, "tabItemIndex");
+        let params = {};
+        let tabItem = this.tabItemData[this.tabItemIndex];
+        // 2代表压制GR；5代表欺骗GR
+        let frameType = tabItem.grType;
+        if (+frameType === 2) {
+          // 处理type和value
+          params = {
+            f1: {
+              mode: tabItem.form.mode1, // 干扰模式
+              type: tabItem.form.type1, // 干扰制式
+              power: tabItem.form.power1,
+              value: this.handleTypeValue(tabItem.form.type1, tabItem, 1),
+            },
+            f2: {
+              mode: tabItem.form.mode2, // 干扰模式
+              type: tabItem.form.mode2, // 干扰制式
+              power: tabItem.form.power2,
+              value: this.handleTypeValue(tabItem.form.type2, tabItem, 2),
+            },
+            f3: {
+              mode: tabItem.form.mode3, // 干扰模式
+              type: tabItem.form.type3, // 干扰制式
+              power: tabItem.form.power3,
+              value: this.handleTypeValue(tabItem.form.type3, tabItem, 3),
+            },
+          };
+        } else {
+          params = {
+            mode: tabItem.grPattern,
+            power: tabItem.homePower,
+            cheat_coordinate: [tabItem.jingdu, tabItem.weidu, tabItem.gaodu],
+            f1: parseInt(
+              tabItem.form1.f1Bit0 +
+                tabItem.form1.f1Bit1 +
+                tabItem.form1.f1Bit2 +
+                tabItem.form1.f1Bit3,
+              2
+            ),
+            f2: parseInt(
+              tabItem.form1.f2Bit0 +
+                tabItem.form1.f2Bit1 +
+                tabItem.form1.f2Bit2 +
+                tabItem.form1.f2Bit3,
+              2
+            ),
+            f3: parseInt(
+              tabItem.form1.f3Bit0 +
+                tabItem.form1.f3Bit1 +
+                tabItem.form1.f3Bit2 +
+                tabItem.form1.f3Bit3,
+              2
+            ),
+          };
+        }
+        const { result } = await this.$api.sendCommand({
+          frameType,
+          station_id: tabItem.id,
+          ...params,
         });
-    },
-    //覆盖还是保留
-    handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then((res) => {
-          console.log(res);
-          done();
-        })
-        .catch((res) => {
-          console.log(res);
+        console.log(result);
+        this.$message({
+          type: "success",
+          message: "发送成功",
         });
+      } catch (error) {
+        this.$message({
+          type: "error",
+          message: "发送失败",
+        });
+      }
+    },
+    // 处理type GR制式与 value对应数据
+    handleTypeValue(type, tabItem, fIndex) {
+      console.log(type, tabItem, "-----------");
+      let form = tabItem.form || tabItem;
+      let arr = [];
+      switch (+type) {
+        case 0:
+          arr = [form["dpgrZbpl" + fIndex]];
+          break;
+        case 1:
+          arr = [
+            form["tpgrZbpl" + fIndex],
+            form["tpgrTzpl" + fIndex],
+            form["tpgrZbpp" + fIndex],
+          ];
+          break;
+        case 2:
+          arr = [
+            form["spgrQspl" + fIndex],
+            form["spgrZzpl" + fIndex],
+            form["spgrSpds" + fIndex],
+            form["spgrPdzlsj" + fIndex],
+          ];
+          break;
+        case 3:
+          arr = [
+            form["bzsgrZxpl" + fIndex],
+            form["bzsgrDk" + fIndex],
+            form["bzsgrLbqxs" + fIndex],
+            form["bzsgrLbqaz" + fIndex],
+          ];
+          break;
+        case 4:
+          arr = [
+            form["txgrZbpl" + fIndex],
+            form["txgrTxxs" + fIndex],
+            form["txgrFhsl" + fIndex],
+            form["txgrPNm" + fIndex],
+            form["txgrLbqxs" + fIndex],
+            form["txgrLbqaz" + fIndex],
+          ];
+          break;
+        case 5:
+          arr = [form["mcgrMckd" + fIndex], form["mcgrZq" + fIndex]];
+          break;
+        default:
+          arr = [];
+          break;
+      }
+      return arr;
     },
     // 查询加载场景
-    async sepet() {
+    async loadScene() {
       try {
         const { result } = await this.$api.loadScene({
           scene_id: this.sceneId,
         });
-        console.log(result);
-        this.ganxinbi = result.param.limit;
-        if (result.param.condition == "tinme") {
-          this.driveValue = "时间";
-        } else {
-          this.driveValue = "位置";
-        }
-        this.num.value = result.param.number;
-        // console.log(res.data.data.track);
-        result.track.map((el) => {
-          // console.log(el);
-          this.coordinatesList.push(el.coordinates);
-        });
-        // console.log(this.coordinatesList);
-        for (let i = 0; i < this.coordinatesList.length; i++) {
-          this.coordinatesOne = this.coordinatesList[0];
-          // console.log(this.coordinatesOne);
-          this.coordinatesTwo = this.coordinatesList[1];
-          this.coordinatesThree = this.coordinatesList[2];
-          this.coordinatesFour = this.coordinatesList[3];
-        }
-        // console.log(this.coordinatesOne );
-        // console.log(this.coordinates);
-        // const mastetData = [...this.masterStation];
-        // this.masterStation = result.cmd;
+        console.log(result, "场景加载");
+        this.sceneData = result; // 绑定场景返回的数据
+        this.ganxinbi = result.param.limit; // 干信比门限回显
+        (this.driveValue = result.param.condition), // == "time" ? "1" : "2"; // 驱动形式回显
+          (this.number = result.param.number); // 限制个数
+        this.handleCoordinatesData(result); // 处理坐标数据
+        // 指令数据绑定
         result.param.cmd.map((item) => {
-          if (item.frameType == 0) {
-            // console.log("进来了");
+          if (item.frameType == 2) {
+            // 压制干扰
             this.masterStation.push({
-              grType: "压制干扰",
-              id: 0,
-              f1: "F1频段",
-              tabs: this.filterStation(item.station_id),
-              zai: "在",
-              frequency1: item.f1.value[0][0],
-              pattern1: item.f1.mode,
-              power1: item.f1.power,
-              InterfereTime: "", //时间或者位置
-              standard1: item.f1.type, //点频干扰
-              dpgrZbpl1: item.f1.value[0][1], //点频干扰(载波频1)
-              tpgrZbpl1: "", //调频干扰(载波频1)
-              tpgrTzpl1: "", //调频干扰(调制频1)
-              tpgrZbpp1: "", //调频干扰(调制频偏)
-              spgrQspl1: "", //扫频干扰(起始频1)
-              spgrZzpl1: "", //扫频干扰(终止频1)
-              spgrSpds1: "", //扫频干扰(扫频点数)
-              spgrPdzlsj1: "", //扫频干扰(频点驻留时间)
-              bzsgrZxpl1: "", //白噪声干扰(中心频1)
-              bzsgrDk1: "", //白噪声干扰(带宽)
-              bzsgrLbqxs1: "", //白噪声干扰(滤波器)
-              bzsgrLbqaz1: "", //白噪声干扰(滤波器a值)
-              txgrZbpl1: "", //调相干扰(载波频1)
-              txgrTxxs: "", //调相干扰
-              txgrFhsl1: "", //调相干扰(符号速率)
-              txgrPNm1: "", //调相干扰
-              txgrLbqxs1: "", //调相干扰
-              txgrLbqaz1: "", //调相干扰(滤波器a值)
-              mcgrMckd1: "", //脉冲干扰(脉冲宽度)
-              mcgrZq1: "", //脉冲干扰(周期)
+              grType: "2",
+              id: item.station_id,
+              tab: this.filterStation[item.station_id],
+              indicator: item.indicator, // 时间
+              mode1: item.f1.mode + "" != "undefined" ? item.f1.mode + "" : "", // F1干扰模式
+              type1: item.f1.type + "" != "undefined" ? item.f1.type + "" : "", // 干扰制式
+              power1: item.f1.power, // 功率
+              value1: item.f1.value,
+              InterfereTime: item.indicator, //时间或者位置
+              dpgrZbpl1: item.f1.value ? item.f1.value[0] : "", //点频干扰(载波频1)
+              tpgrZbpl1:
+                item.f1.value && item.f1.value[0] ? item.f1.value[0] : "", //调频干扰(载波频1)
+              tpgrTzpl1:
+                item.f1.value && item.f1.value[1] ? item.f1.value[1] : "", //调频干扰(调制频1)
+              tpgrZbpp1:
+                item.f1.value && item.f1.value[2] ? item.f1.value[2] : "", //调频干扰(调制频偏)
+              spgrQspl1:
+                item.f1.value && item.f1.value[0] ? item.f1.value[0] : "", //扫频干扰(起始频1)
+              spgrZzpl1:
+                item.f1.value && item.f1.value[1] ? item.f1.value[1] : "", //扫频干扰(终止频1)
+              spgrSpds1:
+                item.f1.value && item.f1.value[2] ? item.f1.value[2] : "", //扫频干扰(扫频点数)
+              spgrPdzlsj1:
+                item.f1.value && item.f1.value[3] ? item.f1.value[3] : "", //扫频干扰(频点驻留时间)
+              bzsgrZxpl1:
+                item.f1.value && item.f1.value[0] ? item.f1.value[0] : "", //白噪声干扰(中心频1)
+              bzsgrDk1:
+                item.f1.value && item.f1.value[1] ? item.f1.value[1] : "", //白噪声干扰(带宽)
+              bzsgrLbqxs1:
+                item.f1.value && item.f1.value[2] ? item.f1.value[2] + "" : "", //白噪声干扰(滤波器)
+              bzsgrLbqaz1:
+                item.f1.value && item.f1.value[3] ? item.f1.value[3] : "", //白噪声干扰(滤波器a值)
+              txgrZbpl1:
+                item.f1.value && item.f1.value[0] ? item.f1.value[0] : "", //调相干扰(载波频1)
+              txgrTxxs1:
+                item.f1.value && item.f1.value[1] ? item.f1.value[1] + "" : "", //调相干扰
+              txgrFhsl1:
+                item.f1.value && item.f1.value[2] ? item.f1.value[2] + "" : "", //调相干扰(符号速率)
+              txgrPNm1:
+                item.f1.value && item.f1.value[3] ? item.f1.value[3] + "" : "", //调相干扰
+              txgrLbqxs1:
+                item.f1.value && item.f1.value[4] ? item.f1.value[4] + "" : "", //调相干扰
+              txgrLbqaz1:
+                item.f1.value && item.f1.value[5] ? item.f1.value[5] : "", //调相干扰(滤波器a值)
+              mcgrMckd1:
+                item.f1.value && item.f1.value[0] ? item.f1.value[0] : "", //脉冲干扰(脉冲宽度)
+              mcgrZq1:
+                item.f1.value && item.f1.value[1] ? item.f1.value[1] : "", //脉冲干扰(周期)
               //F2频段
-              tabs1: this.filterStation(item.station_id),
-              f2: "F2频段",
-              zai1: "在",
-              frequency2: item.f2.value[0][0], //
-              pattern2: item.f2.mode,
+              type2: item.f2.type + "" != "undefined" ? item.f2.type + "" : "", // 干扰制式,
               power2: item.f2.power,
-              standard2: item.f2.type,
-              dpgrZbpl2: item.f2.value[0][1], //点频干扰
-              tpgrZbpl2: "", //调频干扰
-              tpgrTzpl2: "", //调频干扰
-              tpgrZbpp2: "", //调频干扰
-              spgrQspl2: "", //扫频干扰
-              spgrZzpl2: "", //扫频干扰
-              spgrSpds2: "", //扫频干扰
-              spgrPdzlsj2: "", //扫频干扰
-              bzsgrZxpl2: "", //白噪声干扰
-              bzsgrDk2: "", //白噪声干扰
-              bzsgrLbqxs2: "", //白噪声干扰
-              bzsgrLbqaz2: "", //白噪声干扰
-              txgrZbpl2: "", //调相干扰
-              txgrTxxs2: "", //调相干扰
-              txgrFhsl2: "", //调相干扰
-              txgrPNm2: "", //调相干扰
-              txgrLbqxs2: "", //调相干扰
-              txgrLbqaz2: "", //调相干扰
-              mcgrMckd2: "", //脉冲干扰
-              mcgrZq2: "", //脉冲干扰
+              value2: item.f2.value,
+              mode2: item.f2.mode + "" != "undefined" ? item.f2.mode + "" : "", // F2干扰模式
+              dpgrZbpl2: item.f1.value ? item.f1.value[0] : "", //点频干扰(载波频1)
+              tpgrZbpl2:
+                item.f1.value && item.f1.value[0] ? item.f1.value[0] : "", //调频干扰(载波频1)
+              tpgrTzpl2:
+                item.f1.value && item.f1.value[1] ? item.f1.value[1] : "", //调频干扰(调制频1)
+              tpgrZbpp2:
+                item.f1.value && item.f1.value[2] ? item.f1.value[2] : "", //调频干扰(调制频偏)
+              spgrQspl2:
+                item.f1.value && item.f1.value[0] ? item.f1.value[0] : "", //扫频干扰(起始频1)
+              spgrZzpl2:
+                item.f1.value && item.f1.value[1] ? item.f1.value[1] : "", //扫频干扰(终止频1)
+              spgrSpds2:
+                item.f1.value && item.f1.value[2] ? item.f1.value[2] : "", //扫频干扰(扫频点数)
+              spgrPdzlsj2:
+                item.f1.value && item.f1.value[3] ? item.f1.value[3] : "", //扫频干扰(频点驻留时间)
+              bzsgrZxpl2:
+                item.f1.value && item.f1.value[0] ? item.f1.value[0] : "", //白噪声干扰(中心频1)
+              bzsgrDk2:
+                item.f1.value && item.f1.value[1] ? item.f1.value[1] : "", //白噪声干扰(带宽)
+              bzsgrLbqxs2:
+                item.f1.value && item.f1.value[2] ? item.f1.value[2] + "" : "", //白噪声干扰(滤波器)
+              bzsgrLbqaz2:
+                item.f1.value && item.f1.value[3] ? item.f1.value[3] : "", //白噪声干扰(滤波器a值)
+              txgrZbpl2:
+                item.f1.value && item.f1.value[0] ? item.f1.value[0] : "", //调相干扰(载波频1)
+              txgrTxxs2:
+                item.f1.value && item.f1.value[1] ? item.f1.value[1] + "" : "", //调相干扰
+              txgrFhsl2:
+                item.f1.value && item.f1.value[2] ? item.f1.value[2] + "" : "", //调相干扰(符号速率)
+              txgrPNm2:
+                item.f1.value && item.f1.value[3] ? item.f1.value[3] + "" : "", //调相干扰
+              txgrLbqxs2:
+                item.f1.value && item.f1.value[4] ? item.f1.value[4] + "" : "", //调相干扰
+              txgrLbqaz2:
+                item.f1.value && item.f1.value[5] ? item.f1.value[5] : "", //调相干扰(滤波器a值)
+              mcgrMckd2:
+                item.f1.value && item.f1.value[0] ? item.f1.value[0] : "", //脉冲干扰(脉冲宽度)
+              mcgrZq2:
+                item.f1.value && item.f1.value[1] ? item.f1.value[1] : "", //脉冲干扰(周期)
               //F3频段
-              tabs2: this.filterStation(item.station_id),
-              f3: "F3频段",
-              zai2: "在",
-              frequency3: item.f3.value[0][0], //
-              pattern3: item.f3.mode,
+              mode3: item.f3.mode + "" != "undefined" ? item.f3.mode + "" : "", // F3干扰模式,
+              type3: item.f3.type + "" != "undefined" ? item.f3.type + "" : "", // 干扰制式,
               power3: item.f3.power,
-              standard3: item.f3.type,
-              dpgrZbpl3: item.f3.value[0][1], //点频干扰
-              tpgrZbpl3: "", //调频干扰
-              tpgrTzpl3: "", //调频干扰
-              tpgrZbpp3: "", //调频干扰
-              spgrQspl3: "", //扫频干扰
-              spgrZzpl3: "", //扫频干扰
-              spgrSpds3: "", //扫频干扰
-              spgrPdzlsj3: "", //扫频干扰
-              bzsgrZxpl3: "", //白噪声干扰
-              bzsgrDk3: "", //白噪声干扰
-              bzsgrLbqxs3: "", //白噪声干扰
-              bzsgrLbqaz3: "", //白噪声干扰
-              txgrZbpl3: "", //调相干扰
-              txgrTxxs3: "", //调相干扰
-              txgrFhsl3: "", //调相干扰
-              txgrPNm3: "", //调相干扰
-              txgrLbqxs3: "", //调相干扰
-              txgrLbqaz3: "", //调相干扰
-              mcgrMckd3: "", //脉冲干扰
-              mcgrZq3: "", //脉冲干扰
+              value3: item.f3.value,
+              dpgrZbpl3: item.f1.value ? item.f1.value[0] : "", //点频干扰(载波频1)
+              tpgrZbpl3:
+                item.f1.value && item.f1.value[0] ? item.f1.value[0] : "", //调频干扰(载波频1)
+              tpgrTzpl3:
+                item.f1.value && item.f1.value[1] ? item.f1.value[1] : "", //调频干扰(调制频1)
+              tpgrZbpp3:
+                item.f1.value && item.f1.value[2] ? item.f1.value[2] : "", //调频干扰(调制频偏)
+              spgrQspl3:
+                item.f1.value && item.f1.value[0] ? item.f1.value[0] : "", //扫频干扰(起始频1)
+              spgrZzpl3:
+                item.f1.value && item.f1.value[1] ? item.f1.value[1] : "", //扫频干扰(终止频1)
+              spgrSpds3:
+                item.f1.value && item.f1.value[2] ? item.f1.value[2] : "", //扫频干扰(扫频点数)
+              spgrPdzlsj3:
+                item.f1.value && item.f1.value[3] ? item.f1.value[3] : "", //扫频干扰(频点驻留时间)
+              bzsgrZxpl3:
+                item.f1.value && item.f1.value[0] ? item.f1.value[0] : "", //白噪声干扰(中心频1)
+              bzsgrDk3:
+                item.f1.value && item.f1.value[1] ? item.f1.value[1] : "", //白噪声干扰(带宽)
+              bzsgrLbqxs3:
+                item.f1.value && item.f1.value[2] ? item.f1.value[2] + "" : "", //白噪声干扰(滤波器)
+              bzsgrLbqaz3:
+                item.f1.value && item.f1.value[3] ? item.f1.value[3] : "", //白噪声干扰(滤波器a值)
+              txgrZbpl3:
+                item.f1.value && item.f1.value[0] ? item.f1.value[0] : "", //调相干扰(载波频1)
+              txgrTxxs3:
+                item.f1.value && item.f1.value[1] ? item.f1.value[1] + "" : "", //调相干扰
+              txgrFhsl3:
+                item.f1.value && item.f1.value[2] ? item.f1.value[2] + "" : "", //调相干扰(符号速率)
+              txgrPNm3:
+                item.f1.value && item.f1.value[3] ? item.f1.value[3] + "" : "", //调相干扰
+              txgrLbqxs3:
+                item.f1.value && item.f1.value[4] ? item.f1.value[4] + "" : "", //调相干扰
+              txgrLbqaz3:
+                item.f1.value && item.f1.value[5] ? item.f1.value[5] : "", //调相干扰(滤波器a值)
+              mcgrMckd3:
+                item.f1.value && item.f1.value[0] ? item.f1.value[0] : "", //脉冲干扰(脉冲宽度)
+              mcgrZq3:
+                item.f1.value && item.f1.value[1] ? item.f1.value[1] : "", //脉冲干扰(周期)
             });
           } else {
+            // 欺骗干扰
             this.masterStation.push({
-              grType: "欺骗干扰",
-              id: 0,
-              f1: "F1频段",
-              tab: this.filterStation(item.station_id),
-              zai: "在",
-              f1Bit0: item.f1.Bit0,
-              f1Bit1: item.f1.Bit1,
-              f1Bit2: item.f1.Bit2,
-              f1Bit3: item.f1.Bit3,
-              f2: "F2频段",
-              f2Bit0: item.f2.Bit0,
-              f2Bit1: item.f2.Bit1,
-              f2Bit2: item.f2.Bit2,
-              f2Bit3: item.f2.Bit3,
-              f3: "F3频段",
-              f3Bit0: item.f3.Bit0,
-              f3Bit1: item.f3.Bit1,
-              f3Bit2: item.f3.Bit2,
-              f3Bit3: item.f3.Bit3,
+              grType: "5",
+              id: item.station_id,
+              tab: this.filterStation[item.station_id],
+              cheat_coordinate: item.cheat_coordinate,
+              jingdu:
+                item.cheat_coordinate && item.cheat_coordinate[0]
+                  ? item.cheat_coordinate[0]
+                  : 0,
+              weidu:
+                item.cheat_coordinate && item.cheat_coordinate[1]
+                  ? item.cheat_coordinate[0]
+                  : 0,
+              gaodu:
+                item.cheat_coordinate && item.cheat_coordinate[2]
+                  ? item.cheat_coordinate[0]
+                  : 0,
+              mode: item.mode,
+              f1Bit: item.f1.toString(2),
+              f2Bit: item.f2.toString(2),
+              f3Bit: item.f3.toString(2),
+              f1Bit0: item.f1.toString(2).split("")[0] || "",
+              f1Bit1: item.f1.toString(2).split("")[1]
+                ? item.f1.toString(2).split("")[1]
+                : "",
+              f1Bit2: item.f1.toString(2).split("")[2]
+                ? item.f1.toString(2).split("")[2]
+                : "",
+              f1Bit3: item.f1.toString(2).split("")[3]
+                ? item.f1.toString(2).split("")[3]
+                : "",
+              f2Bit0: item.f2.toString(2).split("")[0] || "",
+              f2Bit1: item.f2.toString(2).split("")[1]
+                ? item.f2.toString(2).split("")[1]
+                : "",
+              f2Bit2: item.f2.toString(2).split("")[2]
+                ? item.f2.toString(2).split("")[2]
+                : "",
+              f2Bit3: item.f2.toString(2).split("")[3]
+                ? item.f2.toString(2).split("")[3]
+                : "",
+              f3Bit0: item.f3.toString(2).split("")[0] || "",
+              f3Bit1: item.f3.toString(2).split("")[1]
+                ? item.f3.toString(2).split("")[1]
+                : "",
+              f3Bit2: item.f3.toString(2).split("")[2]
+                ? item.f3.toString(2).split("")[2]
+                : "",
+              f3Bit3: item.f3.toString(2).split("")[3]
+                ? item.f3.toString(2).split("")[3]
+                : "",
             });
           }
-          // console.log(this.masterStation, "this.masterStation");
-          // this.masterStation.push(mastetData)
         });
-
-        for (let i = 0; i < result.station.length; i++) {
-          this.coordinates1 = result.station[0].coordinates;
-          this.coordinates2 = result.station[1].coordinates;
-          this.coordinates3 = result.station[2].coordinates;
-          this.coordinates4 = result.station[3].coordinates;
-        }
-        this.outTimer = setTimeout(() => {
-          //设置延迟执行
-          this.setStations();
-        }, 2000);
       } catch (error) {
         console.log(error);
       }
     },
-
-    // 站点名称过滤
-    filterStation(id) {
-      let name = "";
-      if (id == 0) {
-        name = "主站1";
-      }
-      if (id == 1) {
-        name = "从站1";
-      }
-      if (id == 2) {
-        name = "从站2";
-      }
-      if (id == 3) {
-        name = "从站3";
-      }
-      return name;
+    // 处理地图坐标数据
+    handleCoordinatesData(result) {
+      this.trackList = result.track;
+      this.stationList = result.station;
+      this.outTimer = setTimeout(() => {
+        this.setStations(); // 设置站点位置
+        this.addTargetHistory(); // 设置目标轨迹位置
+      }, 1000);
     },
-
-    // 删除
-    deleteData() {
-      this.masterStation.splice(this.current, 1);
+    // 删除单行指令
+    deleteData(index) {
+      this.masterStation.splice(index, 1);
       this.$message({
         message: "删除成功",
         type: "success",
       });
       this.current = null;
-      // console.log(this.masterStation, "this.masterStation");
     },
     //缩放到西北区域
     flyToXiBei() {
-      var mapFrame = document.getElementById("ifrm").contentWindow;
-      mapFrame.postMessage(
+      window.mapFrame.postMessage(
         {
           cmd: "flyTo", //地图缩放到指定位置和层级命名
           params: {
@@ -4041,96 +3566,53 @@ export default {
         "*"
       );
     },
-    // md5(){
-    //   var  bbb = ''
-    //   var secret= '123456'
-    //   var secretHeader = '123456'
-    //   let a =  this.$md5(bbb)
-    //   this.md5app = secretHeader + a + secret
-    //  this.setmd5 =  this.$md5( this.md5app)
-    //   console.log(this.setmd5);
-    // },
-    buildSign(postData) {
-      var secret = "123456";
-      var secretHeader = "123456";
-      var paramNames = [];
-      for (var key in postData) {
-        paramNames.push(key);
-      }
-
-      paramNames.sort();
-
-      var paramNameValue = [];
-
-      for (var i = 0, len = paramNames.length; i < len; i++) {
-        var paramName = paramNames[i];
-        paramNameValue.push(paramName);
-        paramNameValue.push(postData[paramName]);
-      }
-      // console.log(paramNameValue);
-      var source = secret + paramNameValue.join("") + secretHeader;
-      this.md5app = secret + this.$md5(source).toUpperCase() + secretHeader;
-      // console.log(this.md5app, this.$md5(this.md5app).toUpperCase());
-      this.md5list = this.$md5(this.md5app).toUpperCase();
-      // MD5算法参见http://pajhome.org.uk/crypt/md5/
-      return this.$md5(source).toUpperCase();
-    },
     beforeDestroy() {
       clearTimeout(this.outTimer);
     },
     //设置干扰站位置
     setStations() {
+      if (!this.sceneId) {
+        this.$message({
+          message: "请先选择场景！",
+          type: "error",
+        });
+        return;
+      }
       let stationsData = [
-        {
-          id: "1",
-          type: "",
-          properties: { 站点名称: "测试站1", 运行状态: "在线" }, //在弹框中显示的信息
-          coordinates: this.coordinates1,
-          styles: {
-            isAlwaysShowPopop: false, //是否保持一直显示弹窗，当该属性为false时可通过点击固定站来切换弹窗的显示状态
-            isDraggable: false, //是否可拖拽 默认为true
-            lineColor: "green", //连接线颜色，默认为red
-            lineWidth: 3, //连接线宽度,默认为3
-            icon: this.stationcolor1, //所用图标颜色，支持的颜色包括["purple","darkblue","blue","yellow","green"],默认值为darkblue
-          },
-        },
-        {
-          id: "2",
-          properties: { 站点名称: "测试站2", 运行状态: "在线" },
-          coordinates: this.coordinates2,
-          styles: {
-            isLine2Target: true, //是否在地图上绘制站点到目标之间的连接线，该参数默认true
-            lineColor: "red", //连接线颜色
-            lineWidth: 1, //连接线宽度
-            isAlwaysShowPopop: true, //是否保持一直显示弹窗
-            icon: this.stationcolor2, //所用图标颜色，支持的颜色包括["purple","darkblue","blue","yellow","green"],默认值为darkblue
-          },
-        },
-        {
-          id: "3",
-          properties: { 站点名称: "测试站3", 运行状态: "在线" },
-          coordinates: this.coordinates3,
-          styles: {
-            isLine2Target: false, //是否在地图上绘制站点到目标之间的连接线，该参数默认true
-            lineColor: "red", //连接线颜色
-            lineWidth: 1, //连接线宽度
-            isAlwaysShowPopop: false, //是否保持一直显示弹窗，当该属性为false时可通过点击固定站来切换弹窗的显示状态
-            icon: this.stationcolor3, //所用图标颜色，支持的颜色包括["purple","darkblue","blue","yellow","green"],默认值为darkblue
-          },
-        },
-        {
-          id: "4",
-          properties: { 站点名称: "测试站4", 运行状态: "在线" },
-          coordinates: this.coordinates4,
-          styles: {
-            isLine2Target: false, //是否在地图上绘制站点到目标之间的连接线，该参数默认true
-            lineColor: "red", //连接线颜色
-            lineWidth: 1, //连接线宽度
-            isAlwaysShowPopop: false, //是否保持一直显示弹窗，当该属性为false时可通过点击固定站来切换弹窗的显示状态
-            icon: this.stationcolor4, //所用图标颜色，支持的颜色包括["purple","darkblue","blue","yellow","green"],默认值为darkblue
-          },
-        },
+        // {
+        //   id: "1",
+        //   type: "",
+        //   properties: { 站点名称: "测试站1", 运行状态: "在线" }, //在弹框中显示的信息
+        //   coordinates: this.coordinates1,
+        //   styles: {
+        //     isAlwaysShowPopop: false, //是否保持一直显示弹窗，当该属性为false时可通过点击固定站来切换弹窗的显示状态
+        //     isDraggable: false, //是否可拖拽 默认为true
+        //     lineColor: "green", //连接线颜色，默认为red
+        //     lineWidth: 3, //连接线宽度,默认为3
+        //     icon: this.stationcolor1, //所用图标颜色，支持的颜色包括["purple","darkblue","blue","yellow","green"],默认值为darkblue
+        //   },
+        // },
       ];
+      this.stationList.forEach((station, i) => {
+        let iconColor = "darkblue";
+        if (station.flag + "" == "true") {
+          iconColor = "green";
+        } else if (station.flag + "" == "false") {
+          iconColor = "purple";
+        }
+        stationsData.push({
+          id: station.id,
+          properties: { 站点名称: "测试站" + i, 运行状态: "在线" },
+          coordinates: station.coordinates,
+          styles: {
+            // isLine2Target: true, //是否在地图上绘制站点到目标之间的连接线，该参数默认true
+            // lineColor: "red", //连接线颜色 默认为red
+            // lineWidth: 1, //连接线宽度 默认为3
+            isAlwaysShowPopop: false, //是否保持一直显示弹窗，当该属性为false时可通过点击固定站来切换弹窗的显示状态
+            icon: iconColor, //所用图标颜色，支持的颜色包括["purple","darkblue","blue","yellow","green"],默认值为darkblue
+          },
+        });
+      });
       window.mapFrame.postMessage(
         {
           cmd: "setStations", //在地图中添加固定站
@@ -4140,12 +3622,21 @@ export default {
         },
         "*"
       );
+      // 设置完站点，让地图到站点出现的大概位置-防止看不到
+      window.mapFrame.postMessage(
+        {
+          cmd: "flyTo", //地图缩放到指定位置和层级命名
+          params: {
+            x: this.stationList[0].coordinates[0],
+            y: this.stationList[0].coordinates[1],
+            level: 7,
+          },
+        },
+        "*"
+      );
     },
-
-    callApi() {},
     clearMap() {
-      var mapFrame = document.getElementById("ifrm").contentWindow;
-      mapFrame.postMessage(
+      window.mapFrame.postMessage(
         {
           cmd: "clearMap", //清除所有地图要素指令
         },
@@ -4162,43 +3653,24 @@ export default {
         "*"
       );
     },
-    showMessage(msg) {
-      console.log(msg, "SD");
-      this.track = msg;
-      let str = msg;
-      let arr = str.split(",");
-      let newArrs = this.getnewArr(arr, 4);
-      //1 console.log(newArrs)
-      let track = [];
-      let trackJson = { id: "", coordinates: "", v: "" };
-      let trackJsonStr = "";
-      newArrs.forEach(function (newArr, index) {
-        console.log(newArr, index);
-        trackJson.id = index;
-        trackJson.coordinates = newArr.slice(0, 3);
-        trackJson.v = newArr[3];
-        trackJsonStr = JSON.stringify(trackJson);
-        track.push(trackJsonStr);
-      });
-      let tracks = track.map((item) => {
-        return JSON.parse(item);
-      });
-      this.trackSplitList = tracks;
-      console.log(tracks);
+    //结束绘制
+    disableDrawTool() {
+      window.mapFrame.postMessage(
+        {
+          cmd: "disableDrawTool", //在地图中添加站点
+          params: {},
+        },
+        "*"
+      );
     },
+    // 右击站点展示站点信息
     addEditPopup(id, position) {
       let popData = {
         properties: {
           经度: position[0],
           纬度: position[1],
-          速度: "100KM/H",
         },
         coordinates: position,
-
-        styles: {
-          bCloseBt: false, //是否显示弹窗 右上角关闭按钮
-          btText: "提交", //弹窗右下角按钮的文字信息
-        },
       };
       window.mapFrame.postMessage(
         {
@@ -4211,174 +3683,8 @@ export default {
       );
     },
   },
-  created() {
-    this.tabItemIndex = 0;
-    //this.getData()
-  },
-  mounted() {
-    // this.hex_md5()
-    // this.md5()
-    //this.buildSign()
-    this.formatDate();
-    this.callApi();
-    this.getSceneList(); // 获取场景数据
-    window.addEventListener("message", (event) => {
-      let data = event.data;
-      if (!data || !data.cmd) {
-        return;
-      }
-      if (data.cmd === "Map_DblClick") {
-        if (!data.params) return;
-        let { lon, lat } = data.params;
-
-        // console.log("双击地图位置：", x, y);
-        this.showMessage("Map_DblClick:双击了地图：[" + lon + "," + lat + "],");
-      } else if (data.cmd === "Map_RightClick") {
-        if (!data.params) return;
-        let { lon, lat } = data.params;
-
-        // console.log("双击地图位置：", x, y);
-        this.showMessage(
-          "Map_RightClick:右键点击了地图：[" + lon + "," + lat + "],"
-        );
-      } else if (data.cmd === "Station_RightClick") {
-        if (!data.params) return;
-        let { id, lon, lat } = data.params;
-        this.stationId = id;
-
-        // console.log("双击地图位置：", x, y);
-        this.showMessage(
-          "Station_RightClick:ID为【" +
-            id +
-            "】的站点被右击了：" +
-            "[" +
-            lon +
-            "," +
-            lat +
-            "],"
-        );
-        this.addEditPopup(id, [lon, lat]);
-      } else if (data.cmd === "Station_Click") {
-        if (!data.params) return;
-        let { id, lon, lat } = data.params;
-        // console.log("双击地图位置：", x, y);
-        this.showMessage(
-          "Station_Click:ID为【" +
-            id +
-            "】的站点被点击了：" +
-            "[" +
-            lon +
-            "," +
-            lat +
-            "],"
-        );
-      }
-      // else if (data.cmd === "Station_DragEnd") {
-      //   if (!data.params) return;
-      //   let { id, lon, lat } = data.params;
-      //
-      //   // console.log("双击地图位置：", x, y);
-      //   showMessage("Station_DragEnd:ID为【" + id + "】的站点被拖动了：" + "["+ lon+ ","+ lat+ "],")
-      // }
-      // else if (data.cmd === "History_Click") {
-      //   if (!data.params) return;
-      //   let { id, lon, lat } = data.params;
-      //
-      //   showMessage("History_Click:ID为【" + id + "】的历史轨迹点被点击了，其坐标为: ["+ lon+ ","+ lat+ "],")
-      // }
-      // else if (data.cmd === "History_RightClick") {
-      //   if (!data.params) return;
-      //   let { id, lon, lat } = data.params;
-      //
-      //   showMessage("History_RightClick:ID为【" + id + "】的历史轨迹点被右键点击了，其坐标为: ["+ lon+ ","+ lat+ "],")
-      // }
-      // else if (data.cmd === "Target_Click") {
-      //   if (!data.params) return;
-      //   let { id, lon, lat } = data.params;
-      //
-      //   showMessage("Target_Click: 目标点被点击了，其坐标为 :["+ lon+ ","+ lat+ "],")
-      // }
-      // else if (data.cmd === "Target_RightClick") {
-      //   if (!data.params) return;
-      //   let { id, lon, lat } = data.params;
-      //
-      //   showMessage("Target_RightClick: 目标点被右键点击了，其坐标为:["+ lon+ ","+ lat+ "],")
-      // }
-      else if (data.cmd === "Line_Drawn") {
-        if (!data.params) return;
-        let { coordinates } = data.params;
-        this.showMessage("路径绘制完成，坐标为：" + coordinates);
-      } else if (data.cmd === "EditPopup_Submit") {
-        if (!data.params) return;
-
-        let object = data.params;
-        let x = object["经度"];
-        let y = object["纬度"];
-
-        if (this.stationId === "1") {
-          this.coordinates1 = [x, y];
-        } else if (this.stationId === "2") {
-          this.coordinates2 = [x, y];
-        } else if (this.stationId === "3") {
-          this.coordinates3 = [x, y];
-        } else if (this.stationId === "4") {
-          this.coordinates4 = [x, y];
-        }
-        // console.log("id=====",this. stationId1);
-
-        // setStations([JSON.stringify(data.params)."经度"]);
-        this.setStations();
-
-        this.showMessage("EditPopup_Submit：" + JSON.stringify(data.params));
-      }
-    });
-    this.showSessionId = window.location.search;
-    //this.src = "http://www.szttchina.com:8092/nl/static/iframe.html";
-    this.src = "http://172.20.10.14/data/gis/run/index.html#/";
-  },
 };
 </script>
-
 <style lang="less" scoped>
-.plan-control {
-  display: flex;
-}
-.my-form {
-  height: 500px;
-  overflow-y: auto;
-}
-
-.fzcs,
-.gzcs {
-  margin-top: 18px;
-}
-.fzcs {
-  margin-bottom: 18px;
-}
-.xzgrzs {
-  padding: 1px;
-  border: 1px solid #1e90ff;
-}
-
-.instructionsSet {
-  margin-left: 15px;
-  background-color: #fff;
-  border: 1px solid #eee;
-  width: 800px;
-  padding-right: 20px;
-  .right {
-    border: 1px solid #b1b1b1;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-  }
-}
-.active {
-  background: #eee;
-}
-.tabs {
-  width: 200px;
-  height: 20px;
-  padding: 0;
-  background-color: #0dfafc;
-}
+@import "../assets/control.less";
 </style>

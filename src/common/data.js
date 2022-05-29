@@ -1,18 +1,22 @@
+// 站点数据集合
 export const tabItemData = [
   {
     name: "主站1",
     id: 0,
     InterfereTime: "", //时间
-    grType: "压制干扰", //类型
-    grpattern: "", //模式
+    grType: "2", //类型
+    grPattern: "", //模式
     homePower: "", //功率
+    jingdu: 0,
+    weidu: 0,
+    gaodu: 0,
     form: {
       state1: false, //f1禁用
       state2: false, //f1禁用
       state3: false, //f1禁用
-      pattern1: "",
+      mode1: "",
       power1: "",
-      standard1: "", //standard1
+      type1: "",
       frequency1: "",
       dpgrZbpl1: "",
       tpgrZbpl1: "",
@@ -34,9 +38,9 @@ export const tabItemData = [
       txgrLbqaz1: "",
       mcgrMckd1: "",
       mcgrZq1: "",
-      pattern2: "",
+      mode2: "",
       power2: "",
-      standard2: "", //form12
+      type2: "", //form12
       frequency2: "",
       dpgrZbpl2: "",
       tpgrZbpl2: "",
@@ -58,9 +62,9 @@ export const tabItemData = [
       txgrLbqaz2: "",
       mcgrMckd2: "",
       mcgrZq2: "",
-      pattern3: "",
+      mode3: "",
       power3: "",
-      standard3: "", //form13
+      type3: "", //form13
       frequency3: "",
       dpgrZbpl3: "",
       tpgrZbpl3: "",
@@ -102,16 +106,19 @@ export const tabItemData = [
     name: "从站1",
     id: 1,
     InterfereTime: "", //时间
-    grType: "压制干扰", //类型
-    grpattern: "", //模式
+    grType: "2", //类型
+    grPattern: "", //模式
     homePower: "", //功率
+    jingdu: 0,
+    weidu: 0,
+    gaodu: 0,
     form: {
       state1: false, //f1禁用
       state2: false, //f1禁用
       state3: false, //f1禁用
-      pattern1: "",
+      mode1: "",
       power1: "",
-      standard1: "", //standard1
+      type1: "",
       frequency1: "",
       dpgrZbpl1: "",
       tpgrZbpl1: "",
@@ -133,9 +140,9 @@ export const tabItemData = [
       txgrLbqaz1: "",
       mcgrMckd1: "",
       mcgrZq1: "",
-      pattern2: "",
+      mode2: "",
       power2: "",
-      standard2: "", //form12
+      type2: "", //form12
       frequency2: "",
       dpgrZbpl2: "",
       tpgrZbpl2: "",
@@ -157,9 +164,9 @@ export const tabItemData = [
       txgrLbqaz2: "",
       mcgrMckd2: "",
       mcgrZq2: "",
-      pattern3: "",
+      mode3: "",
       power3: "",
-      standard3: "", //form13
+      type3: "", //form13
       frequency3: "",
       dpgrZbpl3: "",
       tpgrZbpl3: "",
@@ -201,16 +208,19 @@ export const tabItemData = [
     name: "从站2",
     id: 2,
     InterfereTime: "", //时间
-    grType: "压制干扰", //类型
-    grpattern: "", //模式
+    grType: "2", //类型
+    grPattern: "", //模式
     homePower: "", //功率
+    jingdu: 0,
+    weidu: 0,
+    gaodu: 0,
     form: {
       state1: false, //f1禁用
       state2: false, //f1禁用
       state3: false, //f1禁用
-      pattern1: "",
+      mode1: "",
       power1: "",
-      standard1: "", //standard1
+      type1: "",
       frequency1: "",
       dpgrZbpl1: "",
       tpgrZbpl1: "",
@@ -232,9 +242,9 @@ export const tabItemData = [
       txgrLbqaz1: "",
       mcgrMckd1: "",
       mcgrZq1: "",
-      pattern2: "",
+      mode2: "",
       power2: "",
-      standard2: "", //form12
+      type2: "", //form12
       frequency2: "",
       dpgrZbpl2: "",
       tpgrZbpl2: "",
@@ -256,9 +266,9 @@ export const tabItemData = [
       txgrLbqaz2: "",
       mcgrMckd2: "",
       mcgrZq2: "",
-      pattern3: "",
+      mode3: "",
       power3: "",
-      standard3: "", //form13
+      type3: "", //form13
       frequency3: "",
       dpgrZbpl3: "",
       tpgrZbpl3: "",
@@ -300,16 +310,16 @@ export const tabItemData = [
     name: "从站3",
     id: 3,
     InterfereTime: "", //时间
-    grType: "压制干扰", //类型
-    grpattern: "", //模式
+    grType: "2", //类型
+    grPattern: "", //模式
     homePower: "", //功率
     form: {
       state1: false, //f1禁用
       state2: false, //f1禁用
       state3: false, //f1禁用
-      pattern1: "",
+      mode1: "",
       power1: "",
-      standard1: "", //standard1
+      type1: "",
       frequency1: "",
       dpgrZbpl1: "",
       tpgrZbpl1: "",
@@ -331,9 +341,9 @@ export const tabItemData = [
       txgrLbqaz1: "",
       mcgrMckd1: "",
       mcgrZq1: "",
-      pattern2: "",
+      mode2: "",
       power2: "",
-      standard2: "", //form12
+      type2: "", //form12
       frequency2: "",
       dpgrZbpl2: "",
       tpgrZbpl2: "",
@@ -355,9 +365,9 @@ export const tabItemData = [
       txgrLbqaz2: "",
       mcgrMckd2: "",
       mcgrZq2: "",
-      pattern3: "",
+      mode3: "",
       power3: "",
-      standard3: "", //form13
+      type3: "", //form13
       frequency3: "",
       dpgrZbpl3: "",
       tpgrZbpl3: "",
@@ -395,4 +405,49 @@ export const tabItemData = [
       f3Bit3: "",
     },
   },
+];
+// 公共干扰频数据
+export const commonFrequency = [
+  { value: "1", label: "GPS-L1" },
+  { value: "2", label: "GPS-L2" },
+  { value: "3", label: "GLONASS-G1" },
+  { value: "4", label: "BD/BD3-B1I" },
+  { value: "5", label: "BD/BD3-B2I" },
+  { value: "6", label: "BD/BD3-B3I" },
+  { value: "7", label: "BD/BD3-B1C" },
+  { value: "8", label: "BD/BD3-B2a" },
+  { value: "9", label: "BD/BD3-B2b" },
+];
+// 干扰模式数据
+export const pattern = [
+  {
+    value: "0",
+    label: "固定源端功1",
+  },
+  {
+    value: "1",
+    label: "固定目标处功1",
+  },
+  {
+    value: "2",
+    label: "固定指向和源端功1",
+  },
+];
+// 调相干扰下拉数据
+export const txgrPNm = [
+  { value: "1", label: "0:PN9" },
+  { value: "2", label: "1:PN11" },
+  { value: "3", label: "2:PN15" },
+  { value: "4", label: "3:PN20" },
+  { value: "5", label: "4:PN23" },
+];
+// 干扰制式
+export const standard = [
+  { value: "0", label: "点频干扰" },
+  { value: "1", label: "调频干扰" },
+  { value: "2", label: "扫频干扰" },
+  { value: "3", label: "白噪声干扰" },
+  { value: "4", label: "调相干扰" },
+  { value: "9", label: "脉冲干扰" },
+  { value: "255", label: "无效干扰" },
 ];

@@ -1,3 +1,8 @@
+<!--
+ * @Author: @@@
+ * @Date: 2022-05-25 13:22:39
+ * @Description: 左侧菜单
+-->
 <template>
   <div class="app-menu">
     <div class="menu-box">
@@ -97,6 +102,7 @@ export default {
     line-height: 60px;
     font-weight: bold;
     background: #409eff;
+    color: #fff;
   }
   /deep/ .el-menu-item {
     height: 50px;

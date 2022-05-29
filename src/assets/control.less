@@ -42,7 +42,7 @@ ol {
   border: 1px solid #ccc;
   padding: 10px 5px;
 }
-li {
+li.cmd-list {
   width: 100%;
   height: 45px;
   line-height: 45px;
@@ -54,7 +54,7 @@ li {
   padding: 2px 5px;
   box-sizing: border-box;
 }
-li > div {
+li.cmd-list > div {
   color: rgb(35, 106, 173);
   cursor: pointer;
   flex: 1;
@@ -76,4 +76,42 @@ li > div {
 .btnDelete {
   height: 30px;
   align-items: center;
+}
+
+.plan-control {
+  display: flex;
+}
+.my-form {
+  height: 500px;
+  overflow-y: auto;
+}
+.fzcs,
+.gzcs {
+  margin-top: 18px;
+}
+.fzcs {
+  margin-bottom: 18px;
+}
+.xzgrzs {
+  padding: 1px;
+  border: 1px solid #1e90ff;
+}
+.instructionsSet {
+  margin-left: 15px;
+  background-color: #fff;
+  border: 1px solid #eee;
+  width: 800px;
+  padding-right: 20px;
+  .right {
+    border: 1px solid #b1b1b1;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+  }
+}
+.active,
+.cmd-list:hover {
+  background: #eee;
+}
+font {
+  color: #1e90ff;
 }

@@ -4,8 +4,7 @@ import router from "./router";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import "normalize.css/normalize.css";
-import "./assets/tab.css";
-import md5 from "js-md5";
+// import md5 from "js-md5";
 Vue.use(ElementUI);
 
 import api from "./api";
@@ -14,7 +13,7 @@ Vue.use(api);
 Vue.prototype.$Bus = new Vue();
 
 Vue.config.productionTip = false;
-Vue.prototype.$md5 = md5;
+// Vue.prototype.$md5 = md5;
 
 new Vue({
   render: (h) => h(App),
