@@ -409,15 +409,29 @@ export const tabItemData = [
 // 公共干扰频数据
 export const commonFrequency = [
   { value: "1", label: "GPS-L1" },
-  { value: "2", label: "GPS-L2" },
-  { value: "3", label: "GLONASS-G1" },
-  { value: "4", label: "BD/BD3-B1I" },
-  { value: "5", label: "BD/BD3-B2I" },
-  { value: "6", label: "BD/BD3-B3I" },
-  { value: "7", label: "BD/BD3-B1C" },
+  { value: "2", label: "GPS-L2C" },
+  { value: "3", label: "GPS-L5C" },
+  { value: "4", label: "GLONASS-G1" },
+  { value: "5", label: "BD/BD3-B1I" },
+  { value: "6", label: "BD/BD3-B1C" },
+  { value: "7", label: "BD/BD3-B2I" },
   { value: "8", label: "BD/BD3-B2a" },
   { value: "9", label: "BD/BD3-B2b" },
+  { value: "10", label: "BD/BD3-B3I" },
 ];
+// 干扰频值映射
+export const frequencyValueMap = {
+  1: 1575.42,
+  2: 1227.6,
+  3: 1176.45,
+  4: 1602,
+  5: 1561.098,
+  6: 1575.42,
+  7: 1207.14,
+  8: 1176.45,
+  9: 1207.14,
+  10: 1268.52,
+};
 // 干扰模式数据
 export const pattern = [
   {
