@@ -1427,7 +1427,7 @@ export default {
         }
       });
     },
-    // 仿真验证 TODO: 接口报错Value out of range. Value:\"255\" Radix:10"
+    // 仿真验证
     async simulationValidate() {
       try {
         if (!this.sceneId) {
@@ -2289,7 +2289,7 @@ export default {
       // this.animateReceiveData();
       // this.testData.push();
     },
-    // TODO: websocket长链接持续渲染需要重做
+    // websocket长链接持续渲染需要重做
     animateReceiveData() {
       let animateInterval = null;
       if (animateInterval != null) {

@@ -5,13 +5,15 @@ import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import "normalize.css/normalize.css";
 // import md5 from "js-md5";
-// import VueSocketIO from "vue-socket.io";
 
-// Vue.use(
-//   new VueSocketIO({
-//     connection: process.env.VUE_APP_BASE_WS,
-//   })
-// );
+import VueSocketIO from "vue-socket.io";
+
+Vue.use(
+  new VueSocketIO({
+    debug: true,
+    connection: "ws://16q20w2155.qicp.vip:40032/jeecg-boot/websocket/1", // process.env.VUE_APP_BASE_WS,
+  })
+);
 
 Vue.use(ElementUI);
 
