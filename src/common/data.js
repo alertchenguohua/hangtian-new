@@ -313,6 +313,9 @@ export const tabItemData = [
     grType: "2", //类型
     grPattern: "", //模式
     homePower: "", //功率
+    jingdu: 0,
+    weidu: 0,
+    gaodu: 0,
     form: {
       state1: false, //f1禁用
       state2: false, //f1禁用

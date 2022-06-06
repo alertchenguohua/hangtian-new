@@ -29,6 +29,12 @@
             保存
           </el-button>
           <el-button type="danger" @click="empty()">清空</el-button>
+          <div class="btns-box">
+            <el-button @click="taskAndFlight('startTask')">开始执行</el-button>
+            <el-button type="danger" @click="taskAndFlight('terminateTask')"
+              >结束执行</el-button
+            >
+          </div>
           <el-dialog
             :visible.sync="saveDialogVisible"
             title="场景保存"
@@ -64,9 +70,9 @@
       <!--  仿真@@模块  -->
       <div class="fzcs">
         <el-card :bordered="false">
-          <p align="center">
+          <div class="fangzhen-title">
             <font color="#1e90ff" size="4">仿真@@</font>
-          </p>
+          </div>
           <font>干扰频1:</font>
           <el-select
             @change="choiceFrequency"
@@ -192,7 +198,7 @@
                 </el-select>
               </p>
               <section v-if="item.grType == 5">
-                <font>请输入欺骗坐标:</font>
+                <font style="margin-left: 20px">请输入欺骗坐标:</font>
                 <el-input-number
                   v-model="item.jingdu"
                   :precision="7"
@@ -253,7 +259,7 @@
               <el-select
                 v-model="item.form.mode1"
                 placeholder="请选择干扰模式"
-                style="width: 150px; margin-left: 10px"
+                style="width: 180px; margin-left: 10px"
               >
                 <el-option
                   v-for="(item, i) in pattern"
@@ -268,12 +274,12 @@
                 placeholder="请输入主1功1值"
                 size="18"
                 v-model="item.form.power1"
-                style="width: 150px; margin-left: 10px"
+                style="width: 180px; margin-left: 10px"
               ></el-input>
               <el-select
                 v-model="item.form.type1"
                 placeholder="请选择干扰制式"
-                style="width: 150px; margin-left: 15px"
+                style="width: 180px; margin-left: 10px"
               >
                 <el-option
                   v-for="(item, i) in standard"
@@ -487,7 +493,7 @@
               <el-select
                 v-model="item.form1.f1Bit0"
                 placeholder="请选择bit0值"
-                style="width: 150px; margin-left: 10px"
+                style="width: 140px; margin-left: 10px"
               >
                 <el-option
                   v-for="(item, i) in bit"
@@ -500,7 +506,7 @@
               <el-select
                 v-model="item.form1.f1Bit1"
                 placeholder="请选择bit1值"
-                style="width: 150px; margin-left: 10px"
+                style="width: 140px; margin-left: 10px"
               >
                 <el-option
                   v-for="(item, i) in bit"
@@ -513,7 +519,7 @@
               <el-select
                 v-model="item.form1.f1Bit2"
                 placeholder="请选择bit2值"
-                style="width: 150px; margin-left: 10px"
+                style="width: 140px; margin-left: 10px"
               >
                 <el-option
                   v-for="(item, i) in bit"
@@ -526,7 +532,7 @@
               <el-select
                 v-model="item.form1.f1Bit3"
                 placeholder="请选择bit3值"
-                style="width: 150px; margin-left: 10px"
+                style="width: 140px; margin-left: 10px"
               >
                 <el-option
                   v-for="(item, i) in bit"
@@ -543,7 +549,7 @@
             <div v-if="item.grType == '2'" class="xzgrzs">
               <el-select
                 v-model="item.form.mode2"
-                style="width: 150px; margin-left: 10px"
+                style="width: 180px; margin-left: 10px"
                 placeholder="请选择干扰模式"
               >
                 <el-option
@@ -559,11 +565,11 @@
                 placeholder="请输入主1功1值"
                 size="18"
                 v-model="item.form.power2"
-                style="width: 150px; margin-left: 10px"
+                style="width: 180px; margin-left: 10px"
               ></el-input>
               <el-select
                 v-model="item.form.type2"
-                style="width: 150px; margin-left: 10px"
+                style="width: 180px; margin-left: 10px"
                 placeholder="请选择干扰制式"
               >
                 <el-option
@@ -779,7 +785,7 @@
               <el-select
                 v-model="item.form1.f2Bit0"
                 placeholder="请选择bit0值"
-                style="width: 150px; margin-left: 10px"
+                style="width: 140px; margin-left: 10px"
               >
                 <el-option
                   v-for="(item, i) in bit"
@@ -792,7 +798,7 @@
               <el-select
                 v-model="item.form1.f2Bit1"
                 placeholder="请选择bit1值"
-                style="width: 150px; margin-left: 10px"
+                style="width: 140px; margin-left: 10px"
               >
                 <el-option
                   v-for="(item, i) in bit"
@@ -805,7 +811,7 @@
               <el-select
                 v-model="item.form1.f2Bit2"
                 placeholder="请选择bit2值"
-                style="width: 150px; margin-left: 10px"
+                style="width: 140px; margin-left: 10px"
               >
                 <el-option
                   v-for="(item, i) in bit"
@@ -818,7 +824,7 @@
               <el-select
                 v-model="item.form1.f2Bit3"
                 placeholder="请选择bit3值"
-                style="width: 150px; margin-left: 10px"
+                style="width: 140px; margin-left: 10px"
               >
                 <el-option
                   v-for="(item, i) in bit"
@@ -835,7 +841,7 @@
             <div v-if="item.grType == '2'" class="xzgrzs">
               <el-select
                 v-model="item.form.mode3"
-                style="width: 150px; margin-left: 10px"
+                style="width: 180px; margin-left: 10px"
                 placeholder="请选择干扰模式"
               >
                 <el-option
@@ -851,11 +857,11 @@
                 placeholder="请输入主1功1值"
                 size="18"
                 v-model="item.form.power3"
-                style="width: 150px; margin-left: 10px"
+                style="width: 180px; margin-left: 10px"
               ></el-input>
               <el-select
                 v-model="item.form.type3"
-                style="width: 150px; margin-left: 10px"
+                style="width: 180px; margin-left: 10px"
                 placeholder="请选择干扰制式"
               >
                 <el-option
@@ -1067,7 +1073,7 @@
               <el-select
                 v-model="item.form1.f3Bit0"
                 placeholder="请选择bit0值"
-                style="width: 150px; margin-left: 10px"
+                style="width: 140px; margin-left: 10px"
               >
                 <el-option
                   v-for="(item, i) in bit"
@@ -1080,7 +1086,7 @@
               <el-select
                 v-model="item.form1.f3Bit1"
                 placeholder="请选择bit1值"
-                style="width: 150px; margin-left: 10px"
+                style="width: 140px; margin-left: 10px"
               >
                 <el-option
                   v-for="(item, i) in bit"
@@ -1093,7 +1099,7 @@
               <el-select
                 v-model="item.form1.f3Bit2"
                 placeholder="请选择bit2值"
-                style="width: 150px; margin-left: 10px"
+                style="width: 140px; margin-left: 10px"
               >
                 <el-option
                   v-for="(item, i) in bit"
@@ -1106,7 +1112,7 @@
               <el-select
                 v-model="item.form1.f3Bit3"
                 placeholder="请选择bit3值"
-                style="width: 150px; margin-left: 10px"
+                style="width: 140px; margin-left: 10px"
               >
                 <el-option
                   v-for="(item, i) in bit"
@@ -1151,30 +1157,27 @@
     <div class="instructionsSet">
       <div class="right">
         <iframe
-          id="ifrm"
           name="mapFrame"
           src="http://101.42.228.120:8092/nl/"
           frameborder="0"
           style="height: 400px; width: 800px"
         ></iframe>
-        <el-button @click="flyToXiBei()">缩放到西北区域</el-button>
-        <el-button @click="setStations()">设置站位置</el-button>
-        <el-button @click="addCustomStyleLine()">添加自定义样式线</el-button>
-        <el-button @click="addTargetHistory()">设置目标轨迹</el-button>
-        <el-button @click="clearMap()">删除所有要素</el-button>
-        <el-button @click="enableDrawTool()">绘制路径</el-button>
-        <el-button @click="disableDrawTool()">结束绘制</el-button>
-      </div>
-      <div>
-        <el-button @click="layoutValidate()">布局判决</el-button>
-        <el-button @click="simulationValidate()">仿真验证</el-button>
-        <el-button @click="messageShow()">信息展示</el-button>
-        <el-button @click="animateReceiveData()">连续接收数据展示</el-button>
-        <el-button @click="taskAndFlight('startTask')">开始执行</el-button>
-        <el-button @click="taskAndFlight('terminateTask')">结束执行</el-button>
-        <el-button @click="taskAndFlight('simulatedFlight')"
-          >模拟飞行</el-button
-        >
+        <div>
+          <el-button @click="setStations()">设置站位置</el-button>
+          <el-button @click="addTargetHistory()">设置目标轨迹</el-button>
+          <el-button @click="enableDrawTool()">绘制路径</el-button>
+          <el-button @click="disableDrawTool()">结束绘制</el-button>
+          <el-button @click="clearMap()" type="danger">删除所有要素</el-button>
+        </div>
+        <div style="margin-top: 15px">
+          <el-button @click="layoutValidate()">布局判决</el-button>
+          <el-button @click="simulationValidate()">仿真验证</el-button>
+          <el-button @click="messageShow()">信息展示</el-button>
+          <el-button @click="animateReceiveData()">连续接收数据展示</el-button>
+          <el-button @click="taskAndFlight('simulatedFlight')"
+            >模拟飞行</el-button
+          >
+        </div>
       </div>
       <el-card :bordered="false">
         <div style="min-height: 230px; text-align: center">
@@ -1257,6 +1260,7 @@ import {
   // getMastetData
   frequencyValueMap,
 } from "@/common/data.js";
+import { Message } from "element-ui";
 export default {
   components: {},
   data() {
@@ -1362,9 +1366,26 @@ export default {
   sockets: {
     connect(data) {
       console.log("socket-连接成功", data);
+      // 订阅事件
+      this.sockets.subscribe("welcome", (data) => {
+        console.log("订阅welcome data ", data);
+      });
+    },
+    disconnect() {
+      console.log("客户端断开连接");
+    },
+    reconnect() {
+      console.log("客户端重新连接");
+    },
+    welcome(data) {
+      console.log("全局welcome" + data);
     },
   },
   methods: {
+    sendMessage() {
+      console.log("sendMessage");
+      this.$socket.emit("hello", "这里是客户端");
+    },
     //场景下拉框获取数据
     async getSceneList() {
       try {
@@ -1431,7 +1452,7 @@ export default {
     async simulationValidate() {
       try {
         if (!this.sceneId) {
-          this.$message({
+          Message({
             message: "请先选择场景！",
             type: "error",
           });
@@ -1507,7 +1528,7 @@ export default {
     async newSceneConfirm() {
       try {
         if (!this.newSceneName.trim()) {
-          this.$message({
+          Message({
             message: "请输入新场景名称！",
             type: "error",
           });
@@ -1519,7 +1540,7 @@ export default {
           ...this.sceneData,
         });
         this.getSceneList();
-        this.$message({
+        Message({
           message: "覆盖场景成功",
           type: "success",
         });
@@ -2278,7 +2299,7 @@ export default {
           }
           break;
       }
-      this.$message({
+      Message({
         message: "修改成功",
         type: "success",
       });
@@ -2336,7 +2357,7 @@ export default {
     async saveScene() {
       try {
         if (!this.sceneId) {
-          this.$message({
+          Message({
             message: "请先选择场景！",
             type: "error",
           });
@@ -2354,14 +2375,14 @@ export default {
           param,
         });
         console.log(result);
-        this.$message({
+        Message({
           message: "保存成功",
           type: "success",
         });
         this.saveDialogVisible = false;
       } catch (error) {
         console.log(error);
-        this.$message({
+        Message({
           message: "保存失败",
           type: "error",
         });
@@ -2436,7 +2457,7 @@ export default {
             this.number = "";
             this.driveValue = "time";
             this.ganxinbi = "";
-            this.$message({
+            Message({
               type: "success",
               message: "清空成功!",
             });
@@ -2453,7 +2474,7 @@ export default {
     async layoutValidate() {
       try {
         if (!this.sceneId) {
-          this.$message({
+          Message({
             type: "error",
             message: "请先选择场景!",
           });
@@ -2530,7 +2551,7 @@ export default {
     async taskAndFlight(taskName) {
       try {
         if (!this.sceneId) {
-          this.$message({
+          Message({
             type: "error",
             message: "请先选择场景!",
           });
@@ -2547,12 +2568,12 @@ export default {
         } else {
           message = "模拟飞行成功";
         }
-        this.$message({
+        Message({
           type: "success",
           message,
         });
       } catch (error) {
-        this.$message({
+        Message({
           type: "error",
           message: "执行失败，请重试！",
         });
@@ -2620,12 +2641,12 @@ export default {
           station_id: tabItem.id,
           ...params,
         });
-        this.$message({
+        Message({
           type: "success",
           message: "发送成功",
         });
       } catch (error) {
-        this.$message({
+        Message({
           type: "error",
           message: "发送失败",
         });
@@ -2907,42 +2928,11 @@ export default {
     // 删除单行指令
     deleteData(index) {
       this.masterStation.splice(index, 1);
-      this.$message({
+      Message({
         message: "删除成功",
         type: "success",
       });
       this.current = null;
-    },
-    //缩放到西北区域
-    flyToXiBei() {
-      window.mapFrame.postMessage(
-        {
-          cmd: "flyTo", //地图缩放到指定位置和层级命名
-          params: {
-            x: 86.95,
-            y: 39.355,
-            level: 7,
-          },
-        },
-        "*"
-      );
-    },
-    //添加自定义样式线
-    addCustomStyleLine() {
-      window.mapFrame.postMessage(
-        {
-          cmd: "addCustomStyleLine", //在地图中添加站点
-          params: {
-            coordinates: this.coordinates,
-            styles: {
-              lineColor: "#FF0099", //线颜色
-              lineWidth: 5, //线宽度
-              duration: 3000, //线显示的时间（单位为毫秒），超过该时间后线自动消失。当该参数为0时，线永久显示
-            },
-          },
-        },
-        "*"
-      );
     },
     beforeDestroy() {
       clearTimeout(this.outTimer);
@@ -2967,7 +2957,7 @@ export default {
     //设置干扰站位置
     setStations() {
       if (!this.sceneId) {
-        this.$message({
+        Message({
           message: "请先选择场景！",
           type: "error",
         });

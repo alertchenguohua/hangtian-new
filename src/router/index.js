@@ -18,6 +18,13 @@ const routes = [
         },
         component: () => import("../views/plan-control.vue"),
       },
+      {
+        path: "planMap",
+        meta: {
+          title: "规划地图",
+        },
+        component: () => import("../views/plan-map.vue"),
+      },
     ],
   },
   // {
@@ -30,6 +37,13 @@ const routes = [
 const router = new VueRouter({
   mode: "hash",
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.title) {
+    document.title = to.meta.title;
+  }
+  next();
 });
 
 export default router;

@@ -94,7 +94,7 @@ export default {
 
 <style lang="less" scoped>
 .app-menu {
-  width: 200px;
+  width: 180px;
   background: #fff;
   .meun-title {
     text-align: center;
